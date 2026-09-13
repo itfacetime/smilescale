@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบภาษาอังกฤษ A-Z - ด.ญ.ชาลิสา ชนะถาวร</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 20px;
+        }
+
+        .header-card {
+            background: white;
+            max-width: 900px;
+            margin: 0 auto 25px auto;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid #e0e0e0;
+        }
+
+        .header-title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .student-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .info-field {
+            flex: 1;
+            min-width: 200px;
+            border-bottom: 2px dashed #999;
+            padding-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .score-box {
+            background: #eef9f5;
+            border: 2px solid #2ecc71;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+            min-width: 200px;
+        }
+
+        .grid-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 2px solid #eaedd0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .q-number {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            background: #ff7675;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .q-score {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 14px;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .q-image {
+            font-size: 80px;
+            line-height: 1;
+            margin: 15px 0 20px 0;
+            user-select: none;
+        }
+
+        .options-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            gap: 8px;
+        }
+
+        .option-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .option-item input {
+            display: none;
+        }
+
+        .box {
+            width: 44px;
+            height: 44px;
+            border: 2px solid #b2bec3;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover .box {
+            border-color: #0984e3;
+            background-color: #e3f2fd;
+        }
+
+        /* Crossmark style when checked */
+        .option-item input:checked + .box {
+            background-color: #ffeaa7;
+            border-color: #fdcb6e;
+        }
+
+        .option-item input:checked + .box::before,
+        .option-item input:checked + .box::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 4px;
+            background-color: #d63031;
+            border-radius: 2px;
+        }
+
+        .option-item input:checked + .box::before {
+            transform: rotate(45deg);
+        }
+
+        .option-item input:checked + .box::after {
+            transform: rotate(-45deg);
+        }
+
+        .opt-text {
+            margin-top: 6px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        .submit-btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn-calc {
+            background-color: #2ecc71;
+            color: white;
+            padding: 12px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-calc:hover {
+            background-color: #27ae60;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .header-card, .question-card {
+                box-shadow: none;
+            }
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            .question-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            .submit-btn-container {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-card">
+        <div class="header-title">แบบทดสอบภาษาอังกฤษ A - Z</div>
+        <div class="student-info">
+            <div class="info-field">ชื่อ-นามสกุล: ด.ญ.ชาลิสา ชนะถาวร</div>
+            <div class="info-field">ชั้น: อ. 1/4</div>
+            <div class="score-box">
+                <div>คะแนนรวมทั้งหมด</div>
+                <div style="font-size: 24px; color: #e74c3c;" id="total-score-display">...... / 26 คะแนน</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-container">
+        
+    <div class="question-card" id="qcard-1">
+        <div class="q-number">1</div>
+        <div class="q-image">🐜</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q1" value="B" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">B</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q1" value="Y" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Y</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q1" value="A" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">A</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q1" value="V" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">V</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q1" value="E" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">E</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-2">
+        <div class="q-number">2</div>
+        <div class="q-image">🐦</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q2" value="Y" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Y</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q2" value="E" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">E</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q2" value="S" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">S</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q2" value="W" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">W</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q2" value="B" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">B</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-3">
+        <div class="q-number">3</div>
+        <div class="q-image">🐱</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q3" value="D" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">D</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q3" value="I" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">I</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q3" value="H" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">H</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q3" value="C" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">C</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q3" value="R" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">R</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-4">
+        <div class="q-number">4</div>
+        <div class="q-image">🐶</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q4" value="D" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">D</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q4" value="O" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">O</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q4" value="V" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">V</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q4" value="S" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">S</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q4" value="X" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">X</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-5">
+        <div class="q-number">5</div>
+        <div class="q-image">🥚</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q5" value="X" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">X</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q5" value="E" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">E</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q5" value="A" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">A</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q5" value="Z" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Z</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q5" value="G" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">G</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-6">
+        <div class="q-number">6</div>
+        <div class="q-image">🌸</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q6" value="Z" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Z</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q6" value="H" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">H</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q6" value="D" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">D</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q6" value="L" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">L</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q6" value="F" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">F</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-7">
+        <div class="q-number">7</div>
+        <div class="q-image">🐐</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q7" value="U" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">U</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q7" value="B" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">B</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q7" value="M" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">M</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q7" value="G" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">G</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q7" value="J" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">J</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-8">
+        <div class="q-number">8</div>
+        <div class="q-image">🏠</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q8" value="V" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">V</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q8" value="H" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">H</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q8" value="U" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">U</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q8" value="S" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">S</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q8" value="K" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">K</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-9">
+        <div class="q-number">9</div>
+        <div class="q-image">🍦</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q9" value="B" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">B</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q9" value="Z" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Z</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q9" value="H" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">H</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q9" value="I" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">I</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q9" value="W" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">W</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-10">
+        <div class="q-number">10</div>
+        <div class="q-image">🍮</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q10" value="J" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">J</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q10" value="V" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">V</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q10" value="P" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">P</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q10" value="N" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">N</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q10" value="I" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">I</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-11">
+        <div class="q-number">11</div>
+        <div class="q-image">👑</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q11" value="I" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">I</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q11" value="X" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">X</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q11" value="W" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">W</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q11" value="G" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">G</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q11" value="K" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">K</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-12">
+        <div class="q-number">12</div>
+        <div class="q-image">🦁</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q12" value="L" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">L</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q12" value="N" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">N</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q12" value="P" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">P</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q12" value="F" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">F</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q12" value="I" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">I</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-13">
+        <div class="q-number">13</div>
+        <div class="q-image">👨</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q13" value="Z" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Z</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q13" value="K" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">K</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q13" value="M" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">M</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q13" value="B" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">B</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q13" value="H" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">H</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-14">
+        <div class="q-number">14</div>
+        <div class="q-image">👩‍⚕️</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q14" value="N" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">N</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q14" value="T" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">T</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q14" value="X" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">X</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q14" value="G" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">G</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q14" value="K" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">K</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-15">
+        <div class="q-number">15</div>
+        <div class="q-image">🐂</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q15" value="O" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">O</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q15" value="E" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">E</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q15" value="H" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">H</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q15" value="I" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">I</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q15" value="Y" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Y</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-16">
+        <div class="q-number">16</div>
+        <div class="q-image">🐷</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q16" value="H" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">H</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q16" value="M" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">M</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q16" value="P" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">P</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q16" value="L" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">L</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q16" value="T" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">T</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-17">
+        <div class="q-number">17</div>
+        <div class="q-image">👸</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q17" value="F" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">F</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q17" value="E" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">E</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q17" value="D" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">D</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q17" value="Q" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">Q</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q17" value="V" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">V</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-18">
+        <div class="q-number">18</div>
+        <div class="q-image">🐰</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q18" value="U" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">U</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q18" value="Q" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Q</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q18" value="O" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">O</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q18" value="R" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">R</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q18" value="I" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">I</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-19">
+        <div class="q-number">19</div>
+        <div class="q-image">🐍</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q19" value="Z" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Z</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q19" value="I" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">I</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q19" value="W" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">W</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q19" value="S" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">S</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q19" value="R" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">R</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-20">
+        <div class="q-number">20</div>
+        <div class="q-image">🐯</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q20" value="A" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">A</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q20" value="T" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">T</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q20" value="Y" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Y</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q20" value="F" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">F</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q20" value="O" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">O</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-21">
+        <div class="q-number">21</div>
+        <div class="q-image">☂️</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q21" value="J" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">J</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q21" value="U" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">U</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q21" value="Q" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Q</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q21" value="T" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">T</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q21" value="V" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">V</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-22">
+        <div class="q-number">22</div>
+        <div class="q-image">🚐</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q22" value="Q" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Q</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q22" value="V" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">V</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q22" value="R" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">R</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q22" value="Z" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Z</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q22" value="A" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">A</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-23">
+        <div class="q-number">23</div>
+        <div class="q-image">🐳</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q23" value="J" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">J</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q23" value="H" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">H</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q23" value="L" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">L</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q23" value="D" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">D</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q23" value="W" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">W</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-24">
+        <div class="q-number">24</div>
+        <div class="q-image">🎄</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q24" value="Y" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Y</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q24" value="P" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">P</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q24" value="X" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">X</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q24" value="C" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">C</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q24" value="Z" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Z</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-25">
+        <div class="q-number">25</div>
+        <div class="q-image">🪀</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q25" value="R" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">R</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q25" value="F" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">F</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q25" value="Y" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">Y</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q25" value="I" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">I</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q25" value="Q" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">Q</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    <div class="question-card" id="qcard-26">
+        <div class="q-number">26</div>
+        <div class="q-image">🦓</div>
+        <div class="q-score">( 1 คะแนน )</div>
+        <div class="options-container">
+            
+        <label class="option-item">
+            <input type="radio" name="q26" value="Z" data-correct="true">
+            <span class="box"></span>
+            <span class="opt-text">Z</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q26" value="W" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">W</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q26" value="V" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">V</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q26" value="M" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">M</span>
+        </label>
+        
+        <label class="option-item">
+            <input type="radio" name="q26" value="J" data-correct="false">
+            <span class="box"></span>
+            <span class="opt-text">J</span>
+        </label>
+        
+        </div>
+    </div>
+    
+    </div>
+
+    <div class="submit-btn-container">
+        <button class="btn-calc" onclick="calculateScore()">ตรวจคะแนนรวมอัตโนมัติ</button>
+    </div>
+
+    <script>
+        function calculateScore() {
+            let score = 0;
+            for (let i = 1; i <= 26; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected && selected.getAttribute('data-correct') === 'true') {
+                    score++;
+                }
+            }
+            document.getElementById('total-score-display').innerText = score + ' / 26 คะแนน';
+            alert('ตรวจคะแนนเรียบร้อยแล้ว! ได้คะแนนรวม: ' + score + ' / 26 คะแนน');
+        }
+    </script>
+
+</body>
+</html>
