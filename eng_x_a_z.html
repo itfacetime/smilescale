@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เกมกากบาทตัวอักษร A-Z (ออกเสียงตัวอักษรทันที)</title>
+    <title>เกมกากบาทตัวอักษร A-Z (เสียงภาษาไทยชัดเจน)</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -30,7 +30,7 @@
             🔊 ฟังเสียงอีกครั้ง
         </button>
 
-        <!-- พื้นที่แสดงตัวอักษรตัวเลือก (ขนาดใหญ่สะใจ) -->
+        <!-- พื้นที่แสดงตัวอักษรตัวเลือก (ขนาดใหญ่สะใจบนมือถือ) -->
         <div id="grid-container" class="grid grid-cols-5 gap-3 mb-4 p-3 bg-gray-50 rounded-2xl min-h-[260px] items-center justify-center">
             <!-- สร้างปุ่มตัวเลือกตัวอักษรด้วย JavaScript -->
         </div>
@@ -44,44 +44,28 @@
         const totalQuestions = 30;
         let score = 0;
         let targetLetter = '';
-        let englishVoice = null;
 
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-        function loadVoices() {
-            const voices = window.speechSynthesis.getVoices();
-            englishVoice = voices.find(v => (v.lang === 'en-US' || v.lang === 'en-GB') && (v.name.includes('Female') || v.name.includes('Google US English') || v.name.includes('Samantha') || v.name.includes('Victoria'))) || voices.find(v => v.lang.includes('en'));
-        }
-
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.onvoiceschanged = loadVoices;
-            loadVoices();
-        }
-
-        function speakText(text, lang = 'en-US', isEnglish = true) {
+        // ฟังก์ชันสั่งพูดด้วยเสียงภาษาไทยที่ชัดเจน
+        function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = lang;
-                utterance.rate = 0.85;
-
-                if (isEnglish && englishVoice) {
-                    utterance.voice = englishVoice;
-                }
-
+                utterance.lang = 'th-TH'; // ใช้เสียงระบบไทย จะออกเสียงตัวอักษรชัดเจนเข้าใจง่าย
+                utterance.rate = 0.85; // ความเร็วพอดี ฟังชัด
                 window.speechSynthesis.speak(utterance);
             }
         }
 
-        // ฟังก์ชันออกเสียงเฉพาะตัวอักษรเป้าหมายทันที
+        // ฟังก์ชันออกเสียงตัวอักษรเป้าหมายทันที
         function speakQuestion() {
-            speakText(targetLetter, 'en-US', true);
+            speakText(targetLetter);
         }
 
         function nextQuestion() {
             if (currentQuestion > totalQuestions) {
-                // เปลี่ยนเสียงพูดสรุปผลเป็นไทย (เพราะไม่ใช่ตัวอักษร A-Z)
-                speakText(`จบเกมแล้วครับ คุณได้คะแนน ${score} คะแนน จาก 30 คะแนน`, 'th-TH', false);
+                speakText(`จบเกมแล้วครับ คุณได้คะแนน ${score} คะแนน จาก 30 คะแนน`);
                 alert(`🎉 จบเกมแล้ว! คุณได้คะแนน ${score} / 30 คะแนน`);
                 currentQuestion = 1;
                 score = 0;
@@ -114,14 +98,14 @@
                         btn.innerHTML = `<span class="text-4xl text-red-500 font-bold">❌</span>`;
                         btn.className = `bg-red-50 border-2 border-red-300 font-bold py-5 rounded-2xl shadow-md flex items-center justify-center`;
                         score += 1;
-                        speakText('Correct', 'en-US', true); // เปลี่ยนเป็นพูดภาษาอังกฤษสั้นๆ หรือเอาออกได้ตามชอบ
+                        speakText('ถูกต้องครับ');
                         
                         disableAllButtons(true);
                         currentQuestion++;
                         setTimeout(nextQuestion, 1200);
                     } else {
                         btn.innerHTML = `<span class="text-3xl text-gray-400">❌</span>`;
-                        speakText('Try again', 'en-US', true);
+                        speakText('ลองใหม่ครับ');
                     }
                 };
                 gridContainer.appendChild(btn);
@@ -137,7 +121,6 @@
         }
 
         window.onload = () => {
-            setTimeout(loadVoices, 200);
             nextQuestion();
         };
     </script>
