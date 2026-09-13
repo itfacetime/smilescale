@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>เกมกากบาทตัวอักษร A-Z (พร้อมเสียง)</title>
+    <title>เกมกากบาทตัวอักษร A-Z (เสียงเจ้าของภาษา)</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -21,14 +21,14 @@
             <span>⭐ คะแนน: <span id="score">0</span></span>
         </div>
         
-        <p class="font-semibold text-gray-800 mb-2" id="instruction-text">จงหากากบาททับตัวอักษร: ?</p>
+        <p class="font-semibold text-gray-800 mb-2">จงหากากบาททับตัวอักษรตามเสียงที่ได้ยิน</p>
         
         <!-- ปุ่มกดฟังเสียงโจทย์ซ้ำ -->
-        <button onclick="speakQuestion()" class="mb-4 bg-indigo-100 text-indigo-600 px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-indigo-200 transition">
-            🔊 ฟังเสียงคำสั่ง
+        <button onclick="speakQuestion()" class="mb-4 bg-indigo-100 text-indigo-600 px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-indigo-200 transition shadow-sm">
+            🔊 ฟังเสียงอีกครั้ง
         </button>
 
-        <!-- พื้นที่แสดงตัวอักษรแบบสุ่มตำแหน่งที่มีเครื่องหมายกากบาทซ่อนอยู่ หรือให้เลือกหา -->
+        <!-- พื้นที่แสดงตัวอักษรตัวเลือก -->
         <div id="grid-container" class="grid grid-cols-5 gap-2 mb-6 p-2 bg-gray-50 rounded-2xl min-h-[180px] items-center justify-center">
             <!-- สร้างปุ่มตัวเลือกตัวอักษรด้วย JavaScript -->
         </div>
@@ -42,33 +42,52 @@
         const totalQuestions = 30;
         let score = 0;
         let targetLetter = '';
+        let englishVoice = null;
 
         // รายการตัวอักษรภาษาอังกฤษพิมพ์ใหญ่ A-Z
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-        // ฟังก์ชันสั่งให้เบราว์เซอร์พูด
-        function speakText(text, lang = 'th-TH') {
+        // โหลดเสียงในระบบ และเลือกเสียงผู้หญิงภาษาอังกฤษ (en-US หรือ en-GB ที่เป็น Female)
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            // พยายามหาเสียงผู้หญิงภาษาอังกฤษ (มักจะมีคำว่า Female, Google US English, Samantha, Victoria เป็นต้น)
+            englishVoice = voices.find(v => (v.lang === 'en-US' || v.lang === 'en-GB') && (v.name.includes('Female') || v.name.includes('Google US English') || v.name.includes('Samantha') || v.name.includes('Victoria'))) || voices.find(v => v.lang.includes('en'));
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+            loadVoices();
+        }
+
+        // ฟังก์ชันสั่งพูด
+        function speakText(text, lang = 'th-TH', isEnglish = false) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = lang;
-                utterance.rate = 0.9;
+                utterance.rate = 0.85; // ความเร็วพอดี ฟังชัดเจน
+
+                // ถ้าระบุว่าเป็นภาษาอังกฤษ ให้ใช้เสียงเจ้าของภาษาที่ค้นพบ
+                if (isEnglish && englishVoice) {
+                    utterance.voice = englishVoice;
+                }
+
                 window.speechSynthesis.speak(utterance);
             }
         }
 
         function speakQuestion() {
-            // อ่านออกเสียงคำสั่ง (เช่น "กากบาทตัวอักษร เอ")
-            speakText(`จงหากากบาททับตัวอักษร`, 'th-TH');
+            // อ่านคำสั่งไทยก่อน แล้วตามด้วยเสียงภาษาอังกฤษแบบเจ้าของภาษา
+            speakText('หากากบาททับตัวอักษร', 'th-TH', false);
             setTimeout(() => {
-                speakText(targetLetter, 'en-US');
-            }, 800);
+                speakText(targetLetter, 'en-US', true);
+            }, 900);
         }
 
         // เริ่มต้นข้อใหม่
         function nextQuestion() {
             if (currentQuestion > totalQuestions) {
-                speakText(`จบเกมแล้วครับ คุณได้คะแนน ${score} คะแนน จาก 30 คะแนน`, 'th-TH');
+                speakText(`จบเกมแล้วครับ คุณได้คะแนน ${score} คะแนน จาก 30 คะแนน`, 'th-TH', false);
                 alert(`🎉 จบเกมแล้ว! คุณได้คะแนน ${score} / 30 คะแนน`);
                 currentQuestion = 1;
                 score = 0;
@@ -79,9 +98,8 @@
 
             // สุ่มตัวอักษรเป้าหมาย 1 ตัวจาก A-Z
             targetLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-            document.getElementById('instruction-text').innerHTML = `จงหากากบาททับตัวอักษร: <span class="text-2xl text-red-500 font-bold">${targetLetter}</span>`;
 
-            // สุ่มตัวอักษรทั้งหมด 10 ตัวเลือกมาแสดงในตาราง (โดยต้องมีตัวเป้าหมายรวมอยู่ด้วยอย่างน้อย 1 ตัว)
+            // สุ่มตัวอักษรทั้งหมด 10 ตัวเลือกมาแสดงในตาราง
             let choices = [targetLetter];
             while (choices.length < 10) {
                 let randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
@@ -103,28 +121,24 @@
                 
                 btn.onclick = () => {
                     if (char === targetLetter) {
-                        // ถ้าตอบถูก ใส่เครื่องหมายกากบาท ❌ ทับปุ่มนั้นชั่วคราวก่อนไปข้อถัดไป
                         btn.innerHTML = `<span class="text-2xl text-red-500">❌</span>`;
                         btn.className = `bg-red-50 border-2 border-red-300 font-bold text-xl py-3 rounded-xl shadow flex items-center justify-center`;
                         score += 1;
-                        speakText('ถูกต้องครับ เก่งมาก', 'th-TH');
+                        speakText('ถูกต้องครับ เก่งมาก', 'th-TH', false);
                         
-                        // ล็อกปุ่มไม่ให้กดซ้ำระหว่างรอเปลี่ยนข้อ
                         disableAllButtons(true);
-                        
                         currentQuestion++;
                         setTimeout(nextQuestion, 1200);
                     } else {
-                        // ถ้าตอบผิด
                         btn.innerHTML = `<span class="text-xl text-gray-400">❌</span>`;
-                        speakText('ลองใหม่อีกครั้งครับ', 'th-TH');
+                        speakText('ลองใหม่อีกครั้งครับ', 'th-TH', false);
                     }
                 };
                 gridContainer.appendChild(btn);
             });
 
-            // อ่านโจทย์ออกเสียงอัตโนมัติ
-            setTimeout(speakQuestion, 500);
+            // ออกเสียงโจทย์อัตโนมัติ
+            setTimeout(speakQuestion, 400);
         }
 
         function disableAllButtons(disable) {
@@ -134,6 +148,7 @@
 
         // เริ่มเกมข้อแรกเมื่อโหลดหน้าเว็บ
         window.onload = () => {
+            setTimeout(loadVoices, 200);
             nextQuestion();
         };
     </script>
