@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เกมกากบาทพยัญชนะไทย ก - ถ (อ่านเต็มคำ)</title>
+    <title>เกมกากบาทพยัญชนะไทย ก - ถ (ตัวเลือก 5 ตัว)</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -14,29 +14,29 @@
     <!-- กรอบหลักขนาดใหญ่เต็มมือถือ -->
     <div class="bg-white rounded-3xl shadow-2xl p-5 w-full max-w-lg text-center relative">
         <!-- ไอคอนตกแต่ง -->
-        <div class="text-5xl mb-1">❌🇹🇭</div>
+        <div class="text-4xl mb-1">❌🇹🇭</div>
         
         <!-- หัวข้อเกมและสถานะข้อ -->
-        <h2 class="text-2xl font-bold text-emerald-600 mb-1">เกมกากบาทพยัญชนะไทย (ก - ถ)</h2>
-        <div class="flex justify-between items-center px-2 text-lg text-blue-600 font-semibold mb-2">
+        <h2 class="text-xl font-bold text-emerald-600 mb-1">เกมกากบาทพยัญชนะไทย (ก - ถ)</h2>
+        <div class="flex justify-between items-center px-2 text-base text-blue-600 font-semibold mb-2">
             <span id="question-tracker">ข้อที่: 1 / 30</span>
             <span>⭐ คะแนน: <span id="score">0</span></span>
         </div>
         
-        <p class="text-lg font-semibold text-gray-800 mb-2">ฟังเสียงแล้วกากบาทพยัญชนะนั้น</p>
-        
-        <!-- ปุ่มกดฟังเสียงซ้ำ -->
-        <button onclick="speakQuestion()" class="mb-4 bg-emerald-100 text-emerald-700 px-6 py-2.5 rounded-full text-base font-bold hover:bg-emerald-200 transition shadow-md active:scale-95">
-            🔊 ฟังเสียงอีกครั้ง
-        </button>
+        <p class="text-base font-semibold text-gray-800 mb-3">ฟังเสียงแล้วกากบาทพยัญชนะนั้น</p>
 
-        <!-- พื้นที่แสดงพยัญชนะตัวเลือก (ใหญ่เต็มตาบนมือถือ) -->
-        <div id="grid-container" class="grid grid-cols-5 gap-3 mb-4 p-3 bg-gray-50 rounded-2xl min-h-[260px] items-center justify-center">
+        <!-- พื้นที่แสดงพยัญชนะตัวเลือก (ปรับเหลือ 5 ตัวเลือก เพื่อความใหญ่สะใจ) -->
+        <div id="grid-container" class="grid grid-cols-5 gap-3 mb-4 p-3 bg-gray-50 rounded-2xl min-h-[140px] items-center justify-center">
             <!-- สร้างปุ่มตัวเลือกพยัญชนะด้วย JavaScript -->
         </div>
         
+        <!-- ปุ่มกดฟังเสียงซ้ำ (ย้ายมาไว้ด้านล่างของตารางตัวเลือก) -->
+        <button onclick="speakQuestion()" class="mb-4 bg-emerald-100 text-emerald-700 px-8 py-3 rounded-full text-base font-bold hover:bg-emerald-200 transition shadow-md active:scale-95">
+            🔊 ฟังเสียงอีกครั้ง
+        </button>
+
         <!-- คะแนนดาวด้านล่าง -->
-        <div class="flex justify-center gap-2 text-2xl">⭐ ⭐ ⭐</div>
+        <div class="flex justify-center gap-2 text-xl">⭐ ⭐ ⭐</div>
     </div>
 
     <script>
@@ -104,9 +104,9 @@
             targetObj = thaiConsonants[Math.floor(Math.random() * thaiConsonants.length)];
             targetLetter = targetObj.char;
 
-            // สุ่มตัวเลือก 10 ตัวจากช่วง ก - ถ มาแสดงในตาราง
+            // สุ่มตัวเลือกเพียง 5 ตัวจากช่วง ก - ถ มาแสดงในตาราง
             let choices = [targetObj];
-            while (choices.length < 10) {
+            while (choices.length < 5) {
                 let randomItem = thaiConsonants[Math.floor(Math.random() * thaiConsonants.length)];
                 if (!choices.some(item => item.char === randomItem.char)) {
                     choices.push(randomItem);
@@ -119,13 +119,14 @@
             
             choices.forEach(item => {
                 const btn = document.createElement('button');
-                btn.className = `bg-white border-2 border-emerald-200 text-emerald-800 font-extrabold text-3xl py-5 rounded-2xl shadow-md hover:bg-emerald-50 active:scale-95 transition-all flex items-center justify-center relative`;
+                // ปรับขนาดตัวอักษรให้ใหญ่ขึ้นเป็น text-4xl และเพิ่มความสูงปุ่มให้กดง่ายเต็มมือถือ
+                btn.className = `bg-white border-2 border-emerald-300 text-emerald-800 font-extrabold text-4xl py-6 rounded-2xl shadow-md hover:bg-emerald-50 active:scale-95 transition-all flex items-center justify-center relative`;
                 btn.innerText = item.char;
                 
                 btn.onclick = () => {
                     if (item.char === targetLetter) {
-                        btn.innerHTML = `<span class="text-4xl text-red-500 font-bold">❌</span>`;
-                        btn.className = `bg-red-50 border-2 border-red-300 font-bold py-5 rounded-2xl shadow-md flex items-center justify-center`;
+                        btn.innerHTML = `<span class="text-5xl text-red-500 font-bold">❌</span>`;
+                        btn.className = `bg-red-50 border-2 border-red-300 font-bold py-6 rounded-2xl shadow-md flex items-center justify-center`;
                         score += 1;
                         speakText('ถูกต้องครับ');
                         
@@ -133,7 +134,7 @@
                         currentQuestion++;
                         setTimeout(nextQuestion, 1200);
                     } else {
-                        btn.innerHTML = `<span class="text-3xl text-gray-400">❌</span>`;
+                        btn.innerHTML = `<span class="text-4xl text-gray-400">❌</span>`;
                         speakText('ลองใหม่ครับ');
                     }
                 };
