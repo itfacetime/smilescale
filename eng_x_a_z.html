@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เกมกากบาทตัวอักษร A-Z (ตัวใหญ่เต็มจอ)</title>
+    <title>เกมกากบาทตัวอักษร A-Z (ออกเสียงตัวอักษรทันที)</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -11,7 +11,7 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-200 to-yellow-200 flex items-center justify-center min-h-screen p-3">
-    <!-- ขยายกรอบหลักให้กว้างขึ้นเต็มมือถือ -->
+    <!-- กรอบหลักขนาดใหญ่เต็มมือถือ -->
     <div class="bg-white rounded-3xl shadow-2xl p-5 w-full max-w-lg text-center relative">
         <!-- ไอคอนตกแต่ง -->
         <div class="text-5xl mb-1">❌🔤</div>
@@ -23,14 +23,14 @@
             <span>⭐ คะแนน: <span id="score">0</span></span>
         </div>
         
-        <p class="text-lg font-semibold text-gray-800 mb-2">จงหากากบาททับตัวอักษรตามเสียงที่ได้ยิน</p>
+        <p class="text-lg font-semibold text-gray-800 mb-2">ฟังเสียงแล้วกากบาทตัวอักษรนั้น</p>
         
-        <!-- ปุ่มกดฟังเสียงโจทย์ซ้ำ (ทำปุ่มให้ใหญ่และกดง่ายขึ้น) -->
+        <!-- ปุ่มกดฟังเสียงซ้ำ -->
         <button onclick="speakQuestion()" class="mb-4 bg-indigo-100 text-indigo-700 px-6 py-2.5 rounded-full text-base font-bold hover:bg-indigo-200 transition shadow-md active:scale-95">
             🔊 ฟังเสียงอีกครั้ง
         </button>
 
-        <!-- พื้นที่แสดงตัวอักษรตัวเลือก (ขยายปุ่มให้ใหญ่สะใจ เต็มตาบนมือถือ) -->
+        <!-- พื้นที่แสดงตัวอักษรตัวเลือก (ขนาดใหญ่สะใจ) -->
         <div id="grid-container" class="grid grid-cols-5 gap-3 mb-4 p-3 bg-gray-50 rounded-2xl min-h-[260px] items-center justify-center">
             <!-- สร้างปุ่มตัวเลือกตัวอักษรด้วย JavaScript -->
         </div>
@@ -58,7 +58,7 @@
             loadVoices();
         }
 
-        function speakText(text, lang = 'th-TH', isEnglish = false) {
+        function speakText(text, lang = 'en-US', isEnglish = true) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
@@ -73,15 +73,14 @@
             }
         }
 
+        // ฟังก์ชันออกเสียงเฉพาะตัวอักษรเป้าหมายทันที
         function speakQuestion() {
-            speakText('หากากบาททับตัวอักษร', 'th-TH', false);
-            setTimeout(() => {
-                speakText(targetLetter, 'en-US', true);
-            }, 900);
+            speakText(targetLetter, 'en-US', true);
         }
 
         function nextQuestion() {
             if (currentQuestion > totalQuestions) {
+                // เปลี่ยนเสียงพูดสรุปผลเป็นไทย (เพราะไม่ใช่ตัวอักษร A-Z)
                 speakText(`จบเกมแล้วครับ คุณได้คะแนน ${score} คะแนน จาก 30 คะแนน`, 'th-TH', false);
                 alert(`🎉 จบเกมแล้ว! คุณได้คะแนน ${score} / 30 คะแนน`);
                 currentQuestion = 1;
@@ -107,7 +106,6 @@
             
             choices.forEach(char => {
                 const btn = document.createElement('button');
-                // เพิ่มขนาดตัวอักษร (text-3xl) และความสูง (py-5) ให้กดง่ายเต็ม็ทวนบนมือถือ
                 btn.className = `bg-white border-2 border-indigo-200 text-indigo-700 font-extrabold text-3xl py-5 rounded-2xl shadow-md hover:bg-indigo-50 active:scale-95 transition-all flex items-center justify-center relative`;
                 btn.innerText = char;
                 
@@ -116,19 +114,20 @@
                         btn.innerHTML = `<span class="text-4xl text-red-500 font-bold">❌</span>`;
                         btn.className = `bg-red-50 border-2 border-red-300 font-bold py-5 rounded-2xl shadow-md flex items-center justify-center`;
                         score += 1;
-                        speakText('ถูกต้องครับ เก่งมาก', 'th-TH', false);
+                        speakText('Correct', 'en-US', true); // เปลี่ยนเป็นพูดภาษาอังกฤษสั้นๆ หรือเอาออกได้ตามชอบ
                         
                         disableAllButtons(true);
                         currentQuestion++;
                         setTimeout(nextQuestion, 1200);
                     } else {
                         btn.innerHTML = `<span class="text-3xl text-gray-400">❌</span>`;
-                        speakText('ลองใหม่อีกครั้งครับ', 'th-TH', false);
+                        speakText('Try again', 'en-US', true);
                     }
                 };
                 gridContainer.appendChild(btn);
             });
 
+            // ออกเสียงตัวอักษรทันทีเมื่อเปลี่ยนข้อ
             setTimeout(speakQuestion, 400);
         }
 
