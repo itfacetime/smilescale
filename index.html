@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คลังรวมผลงาน - Smilescale</title>
+    <style>
+        @import url('https://googleapis.com');
+        
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #E0F2FE 0%, #FEE2E2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .menu-container {
+            background-color: white;
+            border-radius: 30px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            border: 6px solid #FFF;
+        }
+
+        h1 {
+            color: #4A90E2;
+            font-size: 28px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .grid-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-link {
+            display: block;
+            text-decoration: none;
+            background-color: #FFF;
+            border: 3px solid #E2E8F0;
+            border-bottom: 6px solid #CBD5E1;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: 600;
+            padding: 18px;
+            color: #334155;
+            transition: all 0.1s ease;
+        }
+
+        .btn-link:hover {
+            background-color: #F8FAFC;
+        }
+
+        .btn-link:active {
+            border-bottom-width: 3px;
+            transform: translateY(3px);
+        }
+
+        /* ตกแต่งสีปุ่มแต่ละงานให้ต่างกัน */
+        .btn-game {
+            border-color: #FFB7B2;
+            border-bottom-color: #FF9AA2;
+            color: #FF6B6B;
+        }
+        .btn-math {
+            border-color: #B5E2FA;
+            border-bottom-color: #90E0EF;
+            color: #0077B6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu-container">
+        <h1>🌟 คลังรวมผลงาน Smilescale 🌟</h1>
+        <p>คลิกเลือกปุ่มด้านล่างเพื่อเปิดดูงานชิ้นที่ต้องการได้เลยจ้า</p>
+        
+        <div class="grid-links">
+            <!-- ปุ่มกดลิงก์ไปงานชิ้นที่ 1 -->
+            <a href="math_cross_1_10.html" class="btn-link btn-math">
+                📊 งานชิ้นที่ 1 (math_cross)
+            </a>
+
+            <!-- ปุ่มกดลิงก์ไปงานชิ้นที่ 2 (เกมกากบาท 1-10) -->
+            <a href="x1_10.html" class="btn-link btn-game">
+                🎯 เกมกากบาทนับจำนวน 1-10
+            </a>
+            
+            <!-- หากมีงานชิ้นที่ 3 ในอนาคต สามารถเพิ่มบรรทัดปุ่มตรงนี้ได้เลยครับ -->
+        </div>
+    </div>
+
+</body>
+</html>
