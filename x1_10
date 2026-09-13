@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกมกากบาทตัวเลขให้ตรงกับจำนวนภาพ 1-10</title>
+    <style>
+        @import url('https://googleapis.com');
+        
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #FFE5EC 0%, #D8B4F8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .game-container {
+            background-color: white;
+            border-radius: 30px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            border: 8px solid #FFF;
+        }
+
+        h1 {
+            color: #FF6B6B;
+            font-size: 26px;
+            margin-top: 0;
+        }
+
+        .score-board {
+            font-size: 18px;
+            color: #4D4D4D;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: #F0F0F0;
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        .image-display-area {
+            background-color: #FAFAFA;
+            border: 4px dashed #FFD166;
+            border-radius: 20px;
+            min-height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            font-size: 50px;
+            user-select: none;
+        }
+
+        .instruction {
+            font-size: 20px;
+            color: #4A90E2;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .btn-option {
+            background-color: #FFF;
+            border: 3px solid #E0E0E0;
+            border-bottom: 6px solid #E0E0E0;
+            border-radius: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 12px 0;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            color: #4D4D4D;
+        }
+
+        .btn-option:active {
+            border-bottom-width: 3px;
+            transform: translateY(3px);
+        }
+
+        /* สีไฮไลท์ตอนเด็กจิ้มเลือก (เปลี่ยนปุ่มใหม่ได้เรื่อยๆ) */
+        .btn-option.selected {
+            background-color: #FFE5EC !important;
+            border-color: #FF6B6B !important;
+            border-bottom-color: #FF6B6B !important;
+            color: #FF6B6B !important;
+            transform: translateY(2px);
+            border-bottom-width: 4px;
+        }
+
+        /* สีเขียวตอนตรวจคำตอบแล้วถูก */
+        .btn-option.correct {
+            background-color: #69DB7C !important;
+            border-color: #2B8A3E !important;
+            border-bottom-color: #2B8A3E !important;
+            color: white !important;
+        }
+
+        /* สีแดงกากบาทตอนตรวจคำตอบแล้วผิด */
+        .btn-option.wrong {
+            background-color: #FF8787 !important;
+            border-color: #C92A2A !important;
+            border-bottom-color: #C92A2A !important;
+            color: white !important;
+        }
+
+        .btn-action {
+            background-color: #A0A0A0;
+            border: none;
+            border-bottom: 6px solid #707070;
+            color: white;
+            padding: 12px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 0 auto;
+            transition: all 0.1s;
+        }
+
+        .btn-action:active {
+            border-bottom-width: 2px;
+            transform: translateY(4px);
+        }
+
+        .feedback-message {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            min-height: 30px;
+        }
+        
+        .summary-screen {
+            display: none;
+        }
+        
+        .btn-restart {
+            background-color: #4A90E2;
+            border: none;
+            border-bottom: 6px solid #2260A8;
+            color: white;
+            padding: 12px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- หน้าเล่นเกม -->
+        <div id="game-screen">
+            <h1>🎯 เกมกากบาทนับจำนวน 1-10</h1>
+            <div class="score-board">ข้อที่ <span id="current-question-num">1</span>/10 | คะแนน: <span id="current-score">0</span></div>
+            <div class="instruction">มีจำนวนทั้งหมดกี่ชิ้น? นับแล้วเลือกคำตอบเลย!</div>
+            
+            <!-- ช่องแสดงภาพอิโมจิ (การ์ตูน) อัตโนมัติ -->
+            <div class="image-display-area" id="image-area"></div>
+            
+            <div class="feedback-message" id="feedback"></div>
+            <div class="options-grid" id="options-container"></div>
+            
+            <!-- ปุ่มควบคุมการส่งคำตอบ / ไปข้อต่อไป -->
+            <button class="btn-action" id="btn-control" onclick="handleControlClick()">ส่งคำตอบ 📝</button>
+        </div>
+
+        <!-- หน้าสรุปตอนจบเกม -->
+        <div class="summary-screen" id="summary-screen">
+            <h1>🎉 จบเกมแล้วจ้า! 🎉</h1>
+            <div style="font-size: 70px; margin: 20px 0;">🏆</div>
+            <div class="instruction" style="font-size: 24px;">หนูๆ ทำคะแนนได้ทั้งหมด</div>
+            <div style="font-size: 40px; font-weight: bold; color: #FF6B6B; margin-bottom: 30px;">
+                <span id="final-score">0</span> / 10 คะแนน
+            </div>
+            <button class="btn-restart" onclick="restartGame()">เล่นอีกครั้ง 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        // รายชื่อตัวการ์ตูนอิโมจิที่จะแสดงในกล่องแบบสุ่ม
+        const emojiList = ['🐱', '🐶', '🍎', '🍓', '🧸', '🚗', '🍩', '🍦', '🐤', '🐰', '🍇', '🐼', '🥕'];
+        let currentQuestion = 1;
+        let score = 0;
+        let correctAnswer = 0;
+        let selectedAnswer = null; 
+        let isChecked = false; 
+        let usedNumbers = [];
+
+        // ระบบเสียงพูดภาษาไทยของเบราว์เซอร์
+        function speakThai(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'th-TH';
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function startGame() {
+            currentQuestion = 1;
+            score = 0;
+            usedNumbers = [];
+            document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('summary-screen').style.display = 'none';
+            document.getElementById('current-score').textContent = score;
+            setupQuestion();
+        }
+
+        function setupQuestion() {
+            selectedAnswer = null;
+            isChecked = false;
+            document.getElementById('current-question-num').textContent = currentQuestion;
+            document.getElementById('feedback').textContent = '';
+            
+            const btnControl = document.getElementById('btn-control');
+            btnControl.textContent = 'ส่งคำตอบ 📝';
+            btnControl.style.backgroundColor = '#A0A0A0'; 
+            btnControl.style.borderBottomColor = '#707070';
+            
+            // สุ่มตัวเลขไม่ให้ซ้ำข้อเดิม
+            do {
+                correctAnswer = Math.floor(Math.random() * 10) + 1;
+            } while (usedNumbers.includes(correctAnswer) && usedNumbers.length < 10);
+            
+            usedNumbers.push(correctAnswer);
+            const randomEmoji = emojiList[Math.floor(Math.random() * emojiList.length)];
+            
+            // วาดตัวการ์ตูนลงกล่องตามจำนวนคำตอบ
+            const imageArea = document.getElementById('image-area');
+            imageArea.innerHTML = '';
+            for(let i = 0; i < correctAnswer; i++) {
+                imageArea.innerHTML += `<span>${randomEmoji}</span>`;
+            }
+
+            // สร้างปุ่มตัวเลข 1-10
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            for(let i = 1; i <= 10; i++) {
+                optionsContainer.innerHTML += `<button class="btn-option" id="opt-${i}" onclick="selectAnswer(${i})">${i}</button>`;
+            }
+        }
+
+        // ฟังก์ชันเลือกปุ่มตัวเลข (กดเปลี่ยนได้ตลอดจนกว่าจะกดส่ง)
+        function selectAnswer(number) {
+            if (isChecked) return; 
+            
+            selectedAnswer = number;
+            
+            for(let i = 1; i <= 10; i++) {
+                document.getElementById(`opt-${i}`).classList.remove('selected');
+            }
+            
+            document.getElementById(`opt-${number}`).classList.add('selected');
+            
+            const btnControl = document.getElementById('btn-control');
+            btnControl.style.backgroundColor = '#4A90E2'; 
+            btnControl.style.borderBottomColor = '#2260A8';
+        }
+
+        function handleControlClick() {
+            if (selectedAnswer === null) {
+                speakThai("กรุณาเลือกตัวเลขก่อนจ้า");
+                return;
+            }
+
+            if (!isChecked) {
+                checkAnswer(); 
+            } else {
+                nextQuestion(); 
+            }
+        }
+
+        // ระบบตรวจคำตอบและส่งเสียง
+        function checkAnswer() {
+            isChecked = true;
+            const selectedButton = document.getElementById(`opt-${selectedAnswer}`);
