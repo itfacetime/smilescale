@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกมจับคู่พยัญชนะกับภาพ ก-ถ</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@600;700&family=Prompt:wght@600&display=swap" rel="stylesheet">
+    <style>
+        .thai-char {
+            font-family: 'Sarabun', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        body {
+            font-family: 'Prompt', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-amber-200 to-sky-200 flex items-center justify-center min-h-screen p-3">
+    <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-5 w-full max-w-lg text-center relative border-4 border-white">
+        <div class="text-4xl mb-1">🎨🐰</div>
+        
+        <h2 class="text-2xl font-bold text-sky-600 mb-1">เกมจับคู่พยัญชนะกับภาพ ก-ถ</h2>
+        <div class="flex justify-between items-center px-2 text-base text-blue-600 font-bold mb-2">
+            <span id="question-tracker">ข้อที่: 1 / 22</span>
+            <span>⭐ คะแนน: <span id="score">0</span></span>
+        </div>
+        
+        <p class="text-base font-semibold text-gray-800 mb-2">รูปนี้ตรงกับพยัญชนะตัวไหน?</p>
+
+        <!-- พื้นที่แสดงรูปภาพโจทย์ (ขยายวงกลมให้ใหญ่ขึ้นเป็น w-40 h-40) -->
+        <div class="mb-4 bg-sky-50 border-4 border-sky-300 rounded-2xl py-4 flex flex-col items-center justify-center shadow-inner">
+            <div class="w-40 h-40 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white mb-2 flex items-center justify-center">
+                <img id="question-img" src="" alt="โจทย์" class="w-full h-full object-cover">
+            </div>
+            <div id="question-name" class="text-2xl font-bold text-sky-900">ไก่</div>
+        </div>
+
+        <!-- พื้นที่แสดงตัวเลือกพยัญชนะ -->
+        <div id="grid-container" class="grid grid-cols-5 gap-2 mb-4 p-2 bg-gray-100 rounded-2xl min-h-[140px] items-center justify-center"></div>
+
+        <div class="flex justify-center gap-2 text-xl">⭐ ⭐ ⭐</div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 22;
+        let score = 0;
+        let targetObj = {};
+        let availableQuestions = [];
+
+        // ฐานข้อมูลอ้างอิงชื่อไฟล์รูปภาพในโฟลเดอร์ thai/
+        const thaiData = [
+            { char: "ก", name: "ไก่", img: "thai/ก.jpg" },
+            { char: "ข", name: "ไข่", img: "thai/ข.jpg" },
+            { char: "ฃ", name: "ขวด", img: "thai/ฃ.jpg" },
+            { char: "ค", name: "ควาย", img: "thai/ค.jpg" },
+            { char: "ฅ", name: "คน", img: "thai/ฅ.jpg" },
+            { char: "ฆ", name: "ระฆัง", img: "thai/ฆ.jpg" },
+            { char: "ง", name: "งู", img: "thai/ง.jpg" },
+            { char: "จ", name: "จาน", img: "thai/จ.jpg" },
+            { char: "ฉ", name: "ฉิ่ง", img: "thai/ฉ.jpg" },
+            { char: "ช", name: "ช้าง", img: "thai/ช.jpg" },
+            { char: "ซ", name: "โซ่", img: "thai/ซ.jpg" },
+            { char: "ฌ", name: "ต้นไม้ (เฌอ)", img: "thai/ฌ.jpg" },
+            { char: "ญ", name: "ผู้หญิง", img: "thai/ญ.jpg" },
+            { char: "ฎ", name: "ชฎา", img: "thai/ฎ.jpg" },
+            { char: "ฏ", name: "ปฏัก", img: "thai/ฏ.jpg" },
+            { char: "ฐ", name: "ฐาน", img: "thai/ฐ.jpg" },
+            { char: "ฑ", name: "มณโฑ", img: "thai/ฑ.jpg" },
+            { char: "ฒ", name: "ผู้เฒ่า", img: "thai/ฒ.jpg" },
+            { char: "ณ", name: "เณร", img: "thai/ณ.jpg" },
+            { char: "ด", name: "เด็ก", img: "thai/ด.jpg" },
+            { char: "ต", name: "เต่า", img: "thai/ต.jpg" },
+            { char: "ถ", name: "ถุง", img: "thai/ถ.jpg" }
+        ];
+
+        function initGame() {
+            currentQuestion = 1;
+            score = 0;
+            availableQuestions = [...thaiData].sort(() => Math.random() - 0.5);
+            nextQuestion();
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'th-TH';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion > totalQuestions) {
+                speakText("เก่งมากค่ะ จบเกมแล้ว");
+                alert(`🎉 เก่งมากจ้า! จบเกมแล้ว ได้คะแนน ${score} / ${totalQuestions} คะแนน`);
+                initGame();
+                return;
+            }
+
+            document.getElementById('question-tracker').innerText = `ข้อที่: ${currentQuestion} / ${totalQuestions}`;
+            document.getElementById('score').innerText = score;
+
+            targetObj = availableQuestions[currentQuestion - 1];
+
+            // โหลดไฟล์รูปภาพจากโฟลเดอร์ thai/ ตามชื่อตัวอักษร
+            document.getElementById('question-img').src = targetObj.img;
+            document.getElementById('question-name').innerText = targetObj.name;
+
+            let choices = [targetObj];
+            while (choices.length < 5) {
+                let randomItem = thaiData[Math.floor(Math.random() * thaiData.length)];
+                if (!choices.some(item => item.char === randomItem.char)) {
+                    choices.push(randomItem);
+                }
+            }
+        
+            choices.sort(() => Math.random() - 0.5);
+
+            const gridContainer = document.getElementById('grid-container');
+            gridContainer.innerHTML = '';
+            
+            choices.forEach(item => {
+                const btn = document.createElement('button');
+                // ใช้ฟอนต์ Sarabun เพื่อให้ตัวอักษรมีหัวและหยักชัดเจนสวยงาม
+                btn.className = `thai-char bg-white border-3 border-sky-400 text-sky-900 text-6xl py-4 rounded-2xl shadow-md hover:bg-sky-50 active:scale-95 transition-all flex items-center justify-center relative`;
+                btn.innerText = item.char;
+                
+                btn.onclick = () => {
+                    if (item.char === targetObj.char) {
+                        btn.innerHTML = `<span class="text-6xl text-red-600 font-bold">❌</span>`;
+                        btn.className = `bg-red-50 border-3 border-red-400 font-bold py-4 rounded-2xl shadow-md flex items-center justify-center`;
+                        score += 1;
+                        
+                        speakText("ถูกต้องค่ะ");
+                        
+                        disableAllButtons(true);
+                        currentQuestion++;
+                        setTimeout(nextQuestion, 1200);
+                    } else {
+                        btn.innerHTML = `<span class="text-6xl text-gray-400 font-bold">❌</span>`;
+                        speakText("ลองใหม่ค่ะ");
+                    }
+                };
+                gridContainer.appendChild(btn);
+            });
+        }
+
+        function disableAllButtons(disable) {
+            const buttons = document.querySelectorAll('#grid-container button');
+            buttons.forEach(btn => btn.disabled = disable);
+        }
+
+        window.onload = () => {
+            initGame();
+        };
+    </script>
+</body>
+</html>
