@@ -5,10 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>เกมตัวเลขตามคำสั่ง 1-10 | เกมฝึกคณิตศาสตร์</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600&display=swap');
+
 *{box-sizing:border-box}
 body{
   margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
-  font-family:"Noto Sans Thai","Tahoma",sans-serif;
+  /* ใช้ฟอนต์ Sarabun และ TH Sarabun PSK ที่มีหัวและรอยหยักชัดเจน ไม่หนาจนเกินไป */
+  font-family:"Sarabun", "TH Sarabun PSK", "Tahoma", sans-serif;
+  font-weight: 400;
   background:linear-gradient(135deg,#fff7e6,#ffeef5);
   color:#333;
 }
@@ -16,7 +20,7 @@ body{
   width:min(94vw,560px); padding:22px; text-align:center;
   background:#fff; border-radius:28px; box-shadow:0 12px 40px #0002;
 }
-h1{margin:0 0 5px;font-size:clamp(26px,7vw,40px)}
+h1{margin:0 0 5px;font-size:clamp(26px,7vw,40px); font-weight: 600;}
 .sub{color:#777;margin-bottom:12px}
 .character{
   width:115px;height:115px;margin:8px auto 2px;position:relative;
@@ -35,19 +39,23 @@ h1{margin:0 0 5px;font-size:clamp(26px,7vw,40px)}
   font-size:clamp(90px,25vw,150px);font-weight:900;line-height:.95;
   margin:5px 0 12px; color:#e91e63; text-shadow:4px 5px 0 #ffd54f;
 }
-.instruction{font-size:20px;font-weight:bold;margin:4px 0 12px;white-space:pre-line;}
+.instruction{font-size:22px;font-weight:600;margin:4px 0 12px;white-space:pre-line;}
 .answers{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 button{
-  border:0;border-radius:18px;padding:15px;font-size:22px;font-weight:bold;
+  border:0;border-radius:18px;padding:15px;
+  /* ขยายตัวเลือกให้ใหญ่ขึ้น ตัวหนังสือชัดเจนและไม่หนาทึบ */
+  font-size:28px;
+  font-weight:600;
   cursor:pointer;background:#f1f1f1;box-shadow:0 4px 0 #ccc;
+  font-family:"Sarabun", "TH Sarabun PSK", "Tahoma", sans-serif;
 }
 button:active{transform:translateY(3px);box-shadow:0 1px 0 #ccc}
 .answer.correct{background:#b9f6ca}
 .answer.wrong{background:#ffcdd2}
 .controls{display:flex;gap:10px;margin-top:14px}
-.status{min-height:32px;margin-top:12px;font-size:22px;font-weight:bold}
-.score{font-size:17px;color:#666;margin-top:5px}
-.start{background:#4caf50;color:white;box-shadow:0 4px 0 #388e3c;font-size:22px;padding:15px 30px;width:100%;margin-top:15px}
+.status{min-height:32px;margin-top:12px;font-size:22px;font-weight:600}
+.score{font-size:18px;color:#666;margin-top:5px}
+.start{background:#4caf50;color:white;box-shadow:0 4px 0 #388e3c;font-size:24px;padding:15px 30px;width:100%;margin-top:15px;font-weight:600;}
 .hidden{display:none!important}
 </style>
 </head>
@@ -66,16 +74,9 @@ button:active{transform:translateY(3px);box-shadow:0 1px 0 #ccc}
 
   <div id="answers" class="answers hidden"></div>
 
-
   <div class="controls" style="display: flex; justify-content: flex-end;"> 
-       <button id="speakBtn" class="hidden">🔊 ฟังอีกครั้ง</button> 
+       <button id="speakBtn" class="hidden" style="font-size:18px; padding:10px 15px;">🔊 ฟังอีกครั้ง</button> 
   </div>
-
-<!-- 
-  <div class="controls">
-    <button id="speakBtn" class="hidden">🔊 ฟังอีกครั้ง</button>
-  </div>
--->
 
   <button id="startBtn" class="start">▶️ เริ่มเกม</button>
   <div id="status" class="status"></div>
