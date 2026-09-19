@@ -215,12 +215,15 @@
                         btn.innerHTML = `<span style="font-size: 2rem; color: #ef4444; font-weight: bold;">❌</span>`;
                         btn.className = `choice-correct`;
                         score += 1;
-                        // แก้ไข: ตอนตอบถูกจะพูดคำนี้ประโยคเดียวตามสั่ง
+                        
                         speakText('สุดยอดจริงๆ ค่ะ'); 
                         
                         disableAllButtons(true);
                         currentQuestion++;
-                        setTimeout(nextQuestion, 1200);
+                        
+                        // แก้ไขจุดนี้: ขยายเวลาหน่วงจาก 1200 เป็น 2200 มิลลิวินาที (2.2 วินาที) 
+                        // เพื่อให้ระบบเปิดช่องให้เสียงพูดจนจบประโยคสมบูรณ์ก่อนจะขยับเลื่อนข้อ
+                        setTimeout(nextQuestion, 2200);
                     } else {
                         btn.innerHTML = `<span style="font-size: 1.875rem; color: #9ca3af;">❌</span>`;
                         speakText('ลองใหม่ค่ะ');
