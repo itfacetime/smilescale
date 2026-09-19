@@ -3,51 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เกมตัวอักษรตามคำสั่งเสียง A-Z (ธีมเอลซ่า & หิมะตก)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>เกมตัวอักษร A-Z (ธีมเอลซ่า & หิมะตก)</title>
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            font-family: 'Prompt', sans-serif; 
-            background: linear-gradient(rgba(15, 32, 67, 0.6), rgba(135, 206, 250, 0.4)), 
-                        url('https://images.unsplash.com/photo-1518242008880-ca5e7f9f545a?q=80&w=1000&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 12px;
-            overflow: hidden;
-            position: relative;
+            font-family: 'Prompt', sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 45%, #0284c7 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; padding: 12px; overflow: hidden; position: relative;
         }
-
-        .snowflakes {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            color: #fff;
-            font-size: 1.2rem;
-            user-select: none;
-            z-index: 1;
-            animation: fall linear infinite;
-        }
-        @keyframes fall {
-            0% { top: -50px; transform: translateX(0) rotate(0deg); opacity: 1; }
-            100% { top: 100vh; transform: translateX(100px) rotate(360deg); opacity: 0.3; }
-        }
+        .snowflakes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .snowflake { position: absolute; top: -10px; color: #ffffff; font-size: 1.2rem; user-select: none; z-index: 1; animation: fall linear infinite; }
+        @keyframes fall { 0% { top: -50px; transform: translateX(0) rotate(0deg); opacity: 1; } 100% { top: 100vh; transform: translateX(100px) rotate(360deg); opacity: 0.2; } }
         .snowflake:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
         .snowflake:nth-child(2) { left: 25%; animation-duration: 11s; animation-delay: 1s; font-size: 1.5rem; }
         .snowflake:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 2s; }
@@ -55,243 +22,109 @@
         .snowflake:nth-child(5) { left: 70%; animation-duration: 10s; animation-delay: 3s; }
         .snowflake:nth-child(6) { left: 85%; animation-duration: 12s; animation-delay: 1.5s; font-size: 1.6rem; }
         .snowflake:nth-child(7) { left: 95%; animation-duration: 7s; animation-delay: 2.5s; }
-
-        .elsa-container {
-            width: 120px;
-            height: 120px;
-            margin-bottom: -15px;
-            z-index: 3;
-            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.2));
-            animation: float 4s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
+        .elsa-avatar { width: 130px; height: 130px; margin-bottom: -15px; z-index: 3; animation: float 4s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         .game-card {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            border-radius: 28px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
-            padding: 24px;
-            width: 100%;
-            max-width: 460px;
-            text-align: center;
-            z-index: 2;
+            background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.6); border-radius: 28px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            padding: 24px; width: 100%; max-width: 460px; text-align: center; z-index: 2;
         }
-        .game-title {
-            font-size: 1.45rem;
-            font-weight: 700;
-            color: #1e3a8a;
-            margin-bottom: 8px;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
-        }
-        .status-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 8px;
-            font-size: 1.1rem;
-            color: #2563eb;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        .game-instruction {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: #475569;
-            margin-bottom: 20px;
-        }
-        
-        .choices-wrapper {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 24px;
-            padding: 16px 12px;
-            background-color: rgba(241, 245, 249, 0.9);
-            border-radius: 16px;
-            width: 100%;
-        }
-
+        .game-title { font-size: 1.45rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; }
+        .status-container { display: flex; justify-content: space-between; align-items: center; padding: 0 8px; font-size: 1.1rem; color: #2563eb; font-weight: 600; margin-bottom: 12px; }
+        .game-instruction { font-size: 1.05rem; font-weight: 600; color: #475569; margin-bottom: 20px; }
+        .choices-wrapper { display: flex; flex-direction: row; justify-content: space-between; gap: 8px; margin-bottom: 24px; padding: 16px 12px; background-color: rgba(241, 245, 249, 0.9); border-radius: 16px; width: 100%; }
         .choice-btn {
-            flex: 1;
-            font-family: Arial, Helvetica, sans-serif;
-            font-weight: 400;
-            font-size: 1.875rem;
-            background-color: #ffffff;
-            border: 2px solid #cbd5e1;
-            color: #1e3a8a;
-            padding: 14px 0;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            outline: none;
+            flex: 1; font-family: Arial, Helvetica, sans-serif; font-weight: 400; font-size: 1.875rem;
+            background-color: #ffffff; border: 2px solid #cbd5e1; color: #1e3a8a; padding: 14px 0; border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; outline: none;
         }
-        .choice-btn:hover:not(:disabled) {
-            background-color: #f0fdf4;
-            border-color: #86efac;
-        }
-        .choice-btn:active:not(:disabled) {
-            transform: scale(0.95);
-        }
-        .choice-btn:disabled {
-            cursor: default;
-        }
-        .choice-correct {
-            flex: 1;
-            background-color: #fef2f2;
-            border-color: #fca5a5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 0;
-            border-radius: 12px;
-        }
-
-        .bottom-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 4px;
-            margin-top: 8px;
-        }
-
-        .stars-container {
-            display: flex;
-            gap: 6px;
-            font-size: 1.5rem;
-        }
-
+        .choice-btn:hover:not(:disabled) { background-color: #f0fdf4; border-color: #86efac; }
+        .choice-btn:active:not(:disabled) { transform: scale(0.95); }
+        .choice-btn:disabled { cursor: default; }
+        .choice-correct { flex: 1; background-color: #fef2f2; border-color: #fca5a5; display: flex; align-items: center; justify-content: center; padding: 14px 0; border-radius: 12px; }
+        .bottom-container { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; margin-top: 8px; }
+        .stars-container { display: flex; gap: 6px; font-size: 1.5rem; }
         .audio-btn {
-            background-color: #0284c7;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 9999px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+            background-color: #0284c7; color: #ffffff; border: none; padding: 10px 20px; border-radius: 9999px;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
         }
-        .audio-btn:hover {
-            background-color: #0369a1;
-        }
-        .audio-btn:active {
-            transform: scale(0.95);
-        }
+        .audio-btn:hover { background-color: #0369a1; }
+        .audio-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
-
     <div class="snowflakes">
-        <div class="snowflake">❄</div><div class="snowflake">❅</div>
-        <div class="snowflake">❄</div><div class="snowflake">❆</div>
-        <div class="snowflake">❄</div><div class="snowflake">❅</div>
-        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div><div class="snowflake">❅</div><div class="snowflake">❄</div><div class="snowflake">❆</div>
+        <div class="snowflake">❄</div><div class="snowflake">❅</div><div class="snowflake">❆</div>
     </div>
-
-    <!-- ปรับเปลี่ยนลิงก์รูปภาพเอลซ่าใหม่ ปลอดภัยและแสดงผลได้ชัวร์ 100% -->
-<img class="elsa-container" src="https://pngitem.com" alt="Elsa Theme">
-
-
+    <svg class="elsa-avatar" viewBox="0 0 100 100" xmlns="http://w3.org">
+        <circle cx="50" cy="50" r="46" fill="#e0f2fe" stroke="#a7f3d0" stroke-width="2"/>
+        <path d="M35,75 Q50,68 65,75 L62,90 L38,90 Z" fill="#7dd3fc"/>
+        <path d="M32,80 Q50,75 68,80 L72,95 L28,95 Z" fill="#0284c7"/>
+        <path d="M42,65 L42,75 L58,75 L58,65 Z" fill="#fee2e2"/>
+        <path d="M32,45 Q32,68 50,68 Q68,68 68,45 Q68,32 50,32 Q32,32 32,45" fill="#ffe4e6"/>
+        <path d="M28,52 Q20,65 24,78 Q28,85 24,92 Q32,85 32,74 Q28,65 32,55" fill="#fef08a"/>
+        <path d="M30,42 Q40,24 50,30 Q60,24 70,42 Q74,30 65,22 Q50,16 35,22 Q26,30 30,42" fill="#fef08a"/>
+        <path d="M45,32 Q50,22 55,32 Q50,25 45,32" fill="#fde047"/>
+        <ellipse cx="42" cy="46" rx="4" ry="5" fill="#ffffff"/><ellipse cx="42" cy="46" rx="2.5" ry="3" fill="#0284c7"/><circle cx="43" cy="44" r="1" fill="#ffffff"/>
+        <ellipse cx="58" cy="46" rx="4" ry="5" fill="#ffffff"/><ellipse cx="58" cy="46" rx="2.5" ry="3" fill="#0284c7"/><circle cx="59" cy="44" r="1" fill="#ffffff"/>
+        <path d="M36,41 Q42,38 46,42" stroke="#ca8a04" stroke-width="1.5" fill="none"/>
+        <path d="M54,42 Q58,38 64,41" stroke="#ca8a04" stroke-width="1.5" fill="none"/>
+        <path d="M45,56 Q50,60 55,56" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M40,25 L45,15 L50,22 L55,15 L60,25 Z" fill="#f59e0b"/><circle cx="50" cy="14" r="1.5" fill="#38bdf8"/>
+    </svg>
     <div class="game-card">
         <h2 class="game-title">เกมตัวอักษรตามคำสั่งเสียง A-Z</h2>
         <div class="status-container">
             <span id="question-tracker">ข้อที่: 1 / 30</span>
             <span>⭐ คะแนน: <span id="score">0</span></span>
         </div>
-        
         <p class="game-instruction">ฟังเสียงแล้วกากบาทตัวอักษรนั้น</p>
-
-        <div id="grid-container" class="choices-wrapper">
-            <!-- สร้างปุ่มตัวเลือกตัวอักษรด้วย JavaScript -->
-        </div>
-        
+        <div id="grid-container" class="choices-wrapper"></div>
         <div class="bottom-container">
             <div class="stars-container">⭐ ⭐ ⭐</div>
-            <button onclick="speakQuestion()" class="audio-btn">
-                🔊 ฟังเสียงอีกครั้ง
-            </button>
+            <button onclick="speakQuestion()" class="audio-btn">🔊 ฟังเสียงอีกครั้ง</button>
         </div>
     </div>
-
     <script>
-        let currentQuestion = 1;
-        const totalQuestions = 30;
-        let score = 0;
-        let targetLetter = '';
-
+        let currentQuestion = 1, totalQuestions = 30, score = 0, targetLetter = '';
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'th-TH'; 
-                utterance.rate = 0.88; 
+                utterance.lang = 'th-TH'; utterance.rate = 0.88;
                 window.speechSynthesis.speak(utterance);
             }
         }
-
-        function speakQuestion() {
-            if (targetLetter === 'X') {
-                speakText('เอ็กซ์');
-            } else {
-                speakText(targetLetter);
-            }
-        }
-
+        function speakQuestion() { if (targetLetter === 'X') { speakText('เอ็กซ์'); } else { speakText(targetLetter); } }
         function nextQuestion() {
             if (currentQuestion > totalQuestions) {
                 speakText(`จบเกมแล้วครับ คุณได้รับคะแนนทั้งหมด ${score} คะแนน จาก 30 คะแนน เก่งมากครับ`);
                 alert(`🎉 จบเกมแล้ว! คุณได้คะแนน ${score} / 30 คะแนน`);
-                currentQuestion = 1;
-                score = 0;
+                currentQuestion = 1; score = 0;
             }
-
             document.getElementById('question-tracker').innerText = `ข้อที่: ${currentQuestion} / ${totalQuestions}`;
             document.getElementById('score').innerText = score;
-
             targetLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-
             let choices = [targetLetter];
             while (choices.length < 5) {
                 let randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
-                if (!choices.includes(randomChar)) {
-                    choices.push(randomChar);
-                }
+                if (!choices.includes(randomChar)) { choices.push(randomChar); }
             }
             choices.sort(() => Math.random() - 0.5);
-
             const gridContainer = document.getElementById('grid-container');
             gridContainer.innerHTML = '';
-            
             choices.forEach(char => {
                 const btn = document.createElement('button');
-                btn.className = `choice-btn`;
-                btn.innerText = char;
-                
+                btn.className = `choice-btn`; btn.innerText = char;
                 btn.onclick = () => {
                     if (char === targetLetter) {
                         btn.innerHTML = `<span style="font-size: 2rem; color: #ef4444; font-weight: bold;">❌</span>`;
-                        btn.className = `choice-correct`;
-                        score += 1;
-                        
+                        btn.className = `choice-correct`; score += 1;
                         speakText('สุดยอดจริงๆ ครับ'); 
-                        
-                        disableAllButtons(true);
-                        currentQuestion++;
-                        
+                        disableAllButtons(true); currentQuestion++;
                         setTimeout(nextQuestion, 2200);
                     } else {
                         btn.innerHTML = `<span style="font-size: 1.875rem; color: #9ca3af;">❌</span>`;
@@ -300,18 +133,13 @@
                 };
                 gridContainer.appendChild(btn);
             });
-
             setTimeout(speakQuestion, 400);
         }
-
         function disableAllButtons(disable) {
             const buttons = document.querySelectorAll('.choices-wrapper button');
             buttons.forEach(btn => btn.disabled = disable);
         }
-
-        window.onload = () => {
-            nextQuestion();
-        };
+        window.onload = () => { nextQuestion(); };
     </script>
 </body>
 </html>
