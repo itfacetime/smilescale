@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เกมตัวอักษรตามคำสั่งเสียง A-Z (ธีมเอลซ่า & หิมะตก)</title>
-    <link href="https://googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -13,9 +13,8 @@
         }
         body { 
             font-family: 'Prompt', sans-serif; 
-            /* ใส่พื้นหลังธีมปราสาทน้ำแข็งและเอลซ่าโทนสีฟ้าม่วงพาสเทลสวยงาม */
             background: linear-gradient(rgba(15, 32, 67, 0.6), rgba(135, 206, 250, 0.4)), 
-                        url('https://unsplash.com') no-repeat center center fixed;
+                        url('https://images.unsplash.com/photo-1518242008880-ca5e7f9f545a?q=80&w=1000&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             display: flex;
             flex-direction: column;
@@ -27,7 +26,6 @@
             position: relative;
         }
 
-        /* --- ระบบเอฟเฟกต์หิมะตก (CSS Snowflakes) --- */
         .snowflakes {
             position: absolute;
             top: 0;
@@ -50,7 +48,6 @@
             0% { top: -50px; transform: translateX(0) rotate(0deg); opacity: 1; }
             100% { top: 100vh; transform: translateX(100px) rotate(360deg); opacity: 0.3; }
         }
-        /* ตั้งค่าสุ่มตำแหน่งและความเร็วของหิมะแต่ละเม็ด */
         .snowflake:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
         .snowflake:nth-child(2) { left: 25%; animation-duration: 11s; animation-delay: 1s; font-size: 1.5rem; }
         .snowflake:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 2s; }
@@ -59,7 +56,6 @@
         .snowflake:nth-child(6) { left: 85%; animation-duration: 12s; animation-delay: 1.5s; font-size: 1.6rem; }
         .snowflake:nth-child(7) { left: 95%; animation-duration: 7s; animation-delay: 2.5s; }
 
-        /* --- รูปเอลซ่าตกแต่งด้านข้างการ์ดเกม (สวยเด่นเห็นชัดบนจอ) --- */
         .elsa-container {
             width: 120px;
             height: 120px;
@@ -73,7 +69,6 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* --- ตัวกล่องเกมแบบกระจกใสเข้ากับธีมน้ำแข็ง (Glassmorphism) --- */
         .game-card {
             background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(10px);
@@ -111,7 +106,6 @@
             margin-bottom: 20px;
         }
         
-        /* บังคับปุ่มเรียงแนวนอนแถวเดียวอย่างสวยงาม ไม่แตกแถวแนวตั้ง */
         .choices-wrapper {
             display: flex;
             flex-direction: row;
@@ -124,7 +118,6 @@
             width: 100%;
         }
 
-        /* รูปแบบตัวอักษรแบบพจนานุกรมและหนาปกติ */
         .choice-btn {
             flex: 1;
             font-family: Arial, Helvetica, sans-serif;
@@ -164,7 +157,6 @@
             border-radius: 12px;
         }
 
-        /* จัดแถวด้านล่างให้แบ่งซ้ายขวา */
         .bottom-container {
             display: flex;
             justify-content: space-between;
@@ -179,7 +171,6 @@
             font-size: 1.5rem;
         }
 
-        /* ปุ่มฟังเสียงอีกครั้งอยู่ล่างขวาเด่นชัดเข้าธีมสีฟ้าน้ำแข็ง */
         .audio-btn {
             background-color: #0284c7;
             color: #ffffff;
@@ -202,20 +193,17 @@
 </head>
 <body>
 
-    <!-- เอฟเฟกต์หิมะตกทั่วหน้าจอ -->
     <div class="snowflakes">
         <div class="snowflake">❄</div><div class="snowflake">❅</div>
         <div class="snowflake">❄</div><div class="snowflake">❆</div>
         <div class="snowflake">❄</div><div class="snowflake">❅</div>
         <div class="snowflake">❆</div>
     </div>
-
-    <!-- รูปเอลซ่าสุดสวยลอยอยู่เหนือตัวกล่องเกม -->
-    <!-- แก้ไขลิงก์ภาพเอลซ่าตัวใหม่แทนอันเดิมที่หมดอายุ -->
+    
+<!-- แก้ไขลิงก์ภาพเอลซ่าตัวใหม่แทนอันเดิมที่หมดอายุ -->
 <img class="elsa-container" src="https://unsplash.com" alt="Elsa Theme">
 
-    <!-- ตัวกล่องเกมสไตล์กระจกน้ำแข็งใส -->
-    <div class="game-card">
+       <div class="game-card">
         <h2 class="game-title">เกมตัวอักษรตามคำสั่งเสียง A-Z</h2>
         <div class="status-container">
             <span id="question-tracker">ข้อที่: 1 / 30</span>
@@ -224,12 +212,10 @@
         
         <p class="game-instruction">ฟังเสียงแล้วกากบาทตัวอักษรนั้น</p>
 
-        <!-- ตัวเลือก 5 ปุ่มแนวนอนด้านบน -->
         <div id="grid-container" class="choices-wrapper">
             <!-- สร้างปุ่มตัวเลือกตัวอักษรด้วย JavaScript -->
         </div>
         
-        <!-- แถวล่าง: คะแนนดาวอยู่ซ้าย และปุ่มฟังเสียงอีกครั้งอยู่ล่างขวาใกล้ดาว -->
         <div class="bottom-container">
             <div class="stars-container">⭐ ⭐ ⭐</div>
             <button onclick="speakQuestion()" class="audio-btn">
@@ -256,7 +242,6 @@
             }
         }
 
-        // โจทย์ออกเสียงเฉพาะตัวอักษร และตั้งค่าตัว X ให้ออกเสียงชัด ๆ ว่า "เอ็กซ์"
         function speakQuestion() {
             if (targetLetter === 'X') {
                 speakText('เอ็กซ์');
@@ -280,3 +265,52 @@
 
             let choices = [targetLetter];
             while (choices.length < 5) {
+                let randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
+                if (!choices.includes(randomChar)) {
+                    choices.push(randomChar);
+                }
+            }
+            choices.sort(() => Math.random() - 0.5);
+
+            const gridContainer = document.getElementById('grid-container');
+            gridContainer.innerHTML = '';
+            
+            choices.forEach(char => {
+                const btn = document.createElement('button');
+                btn.className = `choice-btn`;
+                btn.innerText = char;
+                
+                btn.onclick = () => {
+                    if (char === targetLetter) {
+                        btn.innerHTML = `<span style="font-size: 2rem; color: #ef4444; font-weight: bold;">❌</span>`;
+                        btn.className = `choice-correct`;
+                        score += 1;
+                        
+                        speakText('สุดยอดจริงๆ ครับ'); 
+                        
+                        disableAllButtons(true);
+                        currentQuestion++;
+                        
+                        setTimeout(nextQuestion, 2200);
+                    } else {
+                        btn.innerHTML = `<span style="font-size: 1.875rem; color: #9ca3af;">❌</span>`;
+                        speakText('ลองใหม่ครับ');
+                    }
+                };
+                gridContainer.appendChild(btn);
+            });
+
+            setTimeout(speakQuestion, 400);
+        }
+
+        function disableAllButtons(disable) {
+            const buttons = document.querySelectorAll('.choices-wrapper button');
+            buttons.forEach(btn => btn.disabled = disable);
+        }
+
+        window.onload = () => {
+            nextQuestion();
+        };
+    </script>
+</body>
+</html>
