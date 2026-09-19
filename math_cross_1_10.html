@@ -54,7 +54,7 @@ button:active{transform:translateY(3px);box-shadow:0 1px 0 #ccc}
 </head>
 <body>
 <div class="game">
-  <h1> 🎯เกมตัวเลขตามคำสั่ง 1-10 </h1>
+  <h1>🎯 เกมตัวเลขตามคำสั่ง 1-10</h1>
   <div class="sub">ฟังตัวเลข แล้วเลือกคำตอบให้ถูกต้อง</div>
 
   <div class="character" aria-label="ตัวการ์ตูนน่ารัก">
@@ -101,21 +101,28 @@ function shuffle(a){
 function newQuestion(){
   locked=false; statusEl.textContent="";
   target=Math.floor(Math.random()*10)+1;
-  numberEl.textContent=target;
+  
+  // ไม่โชว์เลขที่โจทย์ ให้แสดงเป็นเครื่องหมายคำถามแทน
+  numberEl.textContent="?"; 
+  
   instruction.textContent="ฟังเสียง แล้วเลือกตัวเลขที่ได้ยิน";
   answers.innerHTML="";
+  
   let opts=new Set([target]);
   while(opts.size<4) opts.add(Math.floor(Math.random()*10)+1);
+  
+  // สุ่มสลับตำแหน่งตัวเลือกไม่ให้เรียงลำดับ
   shuffle([...opts]).forEach(n=>{
     const b=document.createElement("button");
     b.className="answer"; b.textContent=n;
     b.onclick=()=>check(n,b);
     answers.appendChild(b);
   });
+  
   answers.classList.remove("hidden");
   $("speakBtn").classList.remove("hidden");
   $("nextBtn").classList.add("hidden");
-  speak(thai[target]); // อ่านเฉพาะตัวเลข ไม่อ่านคำว่า "กากบาท"
+  speak(thai[target]);
 }
 
 function check(n,b){
