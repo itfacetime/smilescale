@@ -55,7 +55,7 @@
         let score = 0;
         let targetLetter = '';
 
-        // ข้อมูลพยัญชนะไทย ก - ถ พร้อมเสียงอ่าน 2 พยางค์ชัดเจนทุกตัว
+        // ข้อมูลพยัญชนะไทย ก - ถ แก้ไขเสียงอ่านให้เป็น 2 พยางค์ชัดเจนทุกตัว 100%
         const thaiConsonants = [
             { char: "ก", sound: "ก ไก่" },
             { char: "ข", sound: "ข ไข่" },
@@ -83,13 +83,13 @@
 
         let targetObj = {};
 
-        // ฟังก์ชันระบบเสียงพูดภาษาไทย (พร้อม Callback ป้องกันการตัดเสียงก่อนจบประโยค)
+        // ฟังก์ชันระบบเสียงพูดภาษาไทย (พร้อมการตั้งค่าเสียงภาษาไทยและ Callback ป้องกันเสียงตัด)
         function speakText(text, onEndCallback) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'th-TH';
-                utterance.rate = 0.85; // ความเร็วพอดี ออกเสียงชัดถ้อยชัดคำ
+                utterance.rate = 0.82; // ความเร็วพอดี ออกเสียงชัดถ้อยชัดคำทุกพยางค์
                 utterance.pitch = 1.0; 
 
                 const voices = window.speechSynthesis.getVoices();
@@ -120,7 +120,7 @@
 
         function nextQuestion() {
             if (currentQuestion > totalQuestions) {
-                speakText(`จบเกมแล้วครับ คุณได้คะแนน ${score} คะแนน จาก 30 คะแนน`, () => {
+                speakText(`จบเกมแล้วค่ะ คุณได้คะแนน ${score} คะแนน จาก 30 คะแนน`, () => {
                     alert(`🎉 จบเกมแล้ว! คุณได้คะแนน ${score} / 30 คะแนน`);
                     currentQuestion = 1;
                     score = 0;
@@ -160,7 +160,7 @@
                         
                         disableAllButtons(true);
                         
-                        // เมื่อตอบถูก จะพูดคำว่า "สุดยอดมากเลยค่ะ" ให้จบประโยคสนิทก่อน แล้วค่อยขึ้นข้อใหม่
+                        // เมื่อตอบถูก พูดคำว่า "สุดยอดมากเลยค่ะ" จนจบประโยคสนิท แล้วค่อยเปลี่ยนข้อ
                         speakText('สุดยอดมากเลยค่ะ', () => {
                             currentQuestion++;
                             setTimeout(nextQuestion, 400);
@@ -168,7 +168,7 @@
 
                     } else {
                         btn.innerHTML = `<span class="text-6xl text-gray-400">❌</span>`;
-                        speakText('ลองใหม่นะ');
+                        speakText('ลองใหม่นะคะ');
                     }
                 };
                 gridContainer.appendChild(btn);
