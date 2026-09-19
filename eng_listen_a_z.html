@@ -6,7 +6,6 @@
     <title>เกมตัวอักษรตามคำสั่งเสียง A-Z (5 ตัวเลือก เสียงไทยชัดเจน)</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        /* สไตล์หลักและการจัดวาง (แทนที่ Tailwind CSS เพื่อความเสถียร 100%) */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -18,8 +17,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: min-content;
-            height: 100vh;
+            min-height: 100vh;
             padding: 12px;
         }
         .game-card {
@@ -76,35 +74,38 @@
         .audio-btn:active {
             transform: scale(0.95);
         }
-        .grid-container {
-            display: grid;
-            grid-template-cols: repeat(5, minmax(0, 1fr));
-            gap: 12px;
+        
+        /* แก้ไข Flexbox บังคับปุ่มเรียงแนวนอน 5 ปุ่มในแถวเดียว ไม่แตกแถวแนวตั้งแน่นอน */
+        .choices-wrapper {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 8px;
             margin-bottom: 20px;
-            padding: 16px;
+            padding: 16px 12px;
             background-color: #f9fafb;
             border-radius: 16px;
-            min-height: 120px;
-            align-items: center;
-            justify-content: center;
+            width: 100%;
         }
+
         /* รูปแบบตัวอักษรแบบพจนานุกรมและหนาปกติ */
         .choice-btn {
+            flex: 1;
             font-family: Arial, Helvetica, sans-serif;
             font-weight: 400;
             font-size: 1.875rem;
             background-color: #ffffff;
             border: 2px solid #e0e7ff;
             color: #4338ca;
-            padding: 16px 0;
-            border-radius: 16px;
+            padding: 14px 0;
+            border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
+            outline: none;
         }
         .choice-btn:hover:not(:disabled) {
             background-color: #f5f3ff;
@@ -116,16 +117,14 @@
             cursor: default;
         }
         .choice-correct {
+            flex: 1;
             background-color: #fef2f2;
             border-color: #fca5a5;
-            font-weight: 700;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            padding: 16px 0;
-            border-radius: 16px;
+            padding: 14px 0;
+            border-radius: 12px;
         }
         .stars-container {
             display: flex;
@@ -136,7 +135,6 @@
     </style>
 </head>
 <body>
-    <!-- กรอบหลักขนาดใหญ่ สไตล์การ์ดโค้งมนเด่นชัด -->
     <div class="game-card">
         <div class="emoji-header">❌🔤</div>
         
@@ -152,8 +150,8 @@
             🔊 ฟังเสียงอีกครั้ง
         </button>
 
-        <!-- พื้นที่ตัวเลือก 5 ตัวอักษรเรียงตัวสวยงามพอดีแถว -->
-        <div id="grid-container" class="grid-container">
+        <!-- เปลี่ยนกล่องเก็บปุ่มตัวเลือก บังคับแนวนอนกว้างพอดีจอ -->
+        <div id="grid-container" class="choices-wrapper">
             <!-- สร้างปุ่มตัวเลือกตัวอักษรด้วย JavaScript -->
         </div>
         
@@ -178,7 +176,7 @@
             }
         }
 
-        // พูดออกเสียงเฉพาะตัวอักษรเป้าหมายเท่านั้นตามบรีฟ
+        // โจทย์ออกเสียงเฉพาะตัวอักษรเท่านั้นตามบรีฟเดิม
         function speakQuestion() {
             speakText(targetLetter);
         }
@@ -215,14 +213,15 @@
                 
                 btn.onclick = () => {
                     if (char === targetLetter) {
-                        btn.innerHTML = `<span style="font-size: 2.25rem; color: #ef4444; font-weight: bold;">❌</span>`;
+                        btn.innerHTML = `<span style="font-size: 2rem; color: #ef4444; font-weight: bold;">❌</span>`;
                         btn.className = `choice-correct`;
                         score += 1;
-                        speakText('สุดยอดจริงๆ ค่ะ'); // ตอบถูกพูดคำนี้ตามสั่ง
+                        // ปรับปรุง: ตอบถูกให้ออกเสียงจบประโยคสมบูรณ์ชัดเจน
+                        speakText('คุณตอบถูกแล้วค่ะ สุดยอดจริงๆ ค่ะ'); 
                         
                         disableAllButtons(true);
                         currentQuestion++;
-                        setTimeout(nextQuestion, 1200);
+                        setTimeout(nextQuestion, 1400);
                     } else {
                         btn.innerHTML = `<span style="font-size: 1.875rem; color: #9ca3af;">❌</span>`;
                         speakText('ลองใหม่ค่ะ');
@@ -235,7 +234,7 @@
         }
 
         function disableAllButtons(disable) {
-            const buttons = document.querySelectorAll('.grid-container button');
+            const buttons = document.querySelectorAll('.choices-wrapper button');
             buttons.forEach(btn => btn.disabled = disable);
         }
 
