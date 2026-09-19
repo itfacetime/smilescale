@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เกมตัวอักษรตามคำสั่งเสียง A-Z (เสียงภาษาไทยชัดเจน)</title>
+    <title>A-Z Alphabet Voice Game (5 Choices - Native English)</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Prompt', sans-serif; }
+        /* ฟอนต์มาตรฐานสากลตามรูปแบบพจนานุกรมอังกฤษ ตัวอักษรอ่านง่าย ไม่บิดเบือน */
+        .dictionary-font { font-family: Arial, Helvetica, sans-serif; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-200 to-yellow-200 flex items-center justify-center min-h-screen p-3">
@@ -27,11 +29,11 @@
         
         <!-- ปุ่มกดฟังเสียงซ้ำ -->
         <button onclick="speakQuestion()" class="mb-4 bg-indigo-100 text-indigo-700 px-6 py-2.5 rounded-full text-base font-bold hover:bg-indigo-200 transition shadow-md active:scale-95">
-            🔊 ฟังเสียงอีกครั้ง
+            🔊 Listen Again (ฟังเสียงอีกครั้ง)
         </button>
 
-        <!-- พื้นที่แสดงตัวอักษรตัวเลือก (ขนาดใหญ่สะใจบนมือถือ) -->
-        <div id="grid-container" class="grid grid-cols-5 gap-3 mb-4 p-3 bg-gray-50 rounded-2xl min-h-[260px] items-center justify-center">
+        <!-- พื้นที่แสดงตัวอักษรตัวเลือก ปรับเหลือ 5 ช่องพอดีในแถวเดียว -->
+        <div id="grid-container" class="grid grid-cols-5 gap-3 mb-4 p-3 bg-gray-50 rounded-2xl min-h-[140px] items-center justify-center dictionary-font">
             <!-- สร้างปุ่มตัวเลือกตัวอักษรด้วย JavaScript -->
         </div>
         
@@ -47,25 +49,25 @@
 
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-        // ฟังก์ชันสั่งพูดด้วยเสียงภาษาไทยที่ชัดเจน
+        // ฟังก์ชันสั่งพูดด้วยเสียงภาษาอังกฤษเจ้าของภาษา (en-US)
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'th-TH'; // ใช้เสียงระบบไทย จะออกเสียงตัวอักษรชัดเจนเข้าใจง่าย
-                utterance.rate = 0.85; // ความเร็วพอดี ฟังชัด
+                utterance.lang = 'en-US'; // ใช้เสียงสำเนียงภาษาอังกฤษแบบ US แท้
+                utterance.rate = 0.85; // ปรับความเร็วเล็กน้อย เพื่อให้ออกเสียงคำชัดเจน ฟังง่าย
                 window.speechSynthesis.speak(utterance);
             }
         }
 
-        // ฟังก์ชันออกเสียงตัวอักษรเป้าหมายทันที
+        // ฟังก์ชันพูดโจทย์เป็นประโยคที่สมบูรณ์สไตล์เจ้าของภาษา
         function speakQuestion() {
-            speakText(targetLetter);
+            speakText(`Please find the letter ${targetLetter}.`);
         }
 
         function nextQuestion() {
             if (currentQuestion > totalQuestions) {
-                speakText(`จบเกมแล้วครับ คุณได้คะแนน ${score} คะแนน จาก 30 คะแนน`);
+                speakText(`Game over. You scored ${score} out of 30 points. Well done!`);
                 alert(`🎉 จบเกมแล้ว! คุณได้คะแนน ${score} / 30 คะแนน`);
                 currentQuestion = 1;
                 score = 0;
@@ -76,8 +78,9 @@
 
             targetLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
 
+            // ปรับตรงนี้: เปลี่ยนเงื่อนไขวนลูปให้สร้างตัวเลือกเพียง 5 ตัวเลือก
             let choices = [targetLetter];
-            while (choices.length < 10) {
+            while (choices.length < 5) {
                 let randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
                 if (!choices.includes(randomChar)) {
                     choices.push(randomChar);
@@ -90,7 +93,8 @@
             
             choices.forEach(char => {
                 const btn = document.createElement('button');
-                btn.className = `bg-white border-2 border-indigo-200 text-indigo-700 font-extrabold text-3xl py-5 rounded-2xl shadow-md hover:bg-indigo-50 active:scale-95 transition-all flex items-center justify-center relative`;
+                // แสดงฟอนต์สไตล์พจนานุกรมอังกฤษ
+                btn.className = `dictionary-font bg-white border-2 border-indigo-200 text-indigo-700 font-extrabold text-3xl py-5 rounded-2xl shadow-md hover:bg-indigo-50 active:scale-95 transition-all flex items-center justify-center relative`;
                 btn.innerText = char;
                 
                 btn.onclick = () => {
@@ -98,20 +102,20 @@
                         btn.innerHTML = `<span class="text-4xl text-red-500 font-bold">❌</span>`;
                         btn.className = `bg-red-50 border-2 border-red-300 font-bold py-5 rounded-2xl shadow-md flex items-center justify-center`;
                         score += 1;
-                        speakText('ถูกต้องครับ');
+                        speakText('That is correct!'); // พูดจบประโยคเมื่อตอบถูก
                         
                         disableAllButtons(true);
                         currentQuestion++;
                         setTimeout(nextQuestion, 1200);
                     } else {
                         btn.innerHTML = `<span class="text-3xl text-gray-400">❌</span>`;
-                        speakText('ลองใหม่ครับ');
+                        speakText('Please try again.'); // พูดจบประโยคเมื่อตอบผิด
                     }
                 };
                 gridContainer.appendChild(btn);
             });
 
-            // ออกเสียงตัวอักษรทันทีเมื่อเปลี่ยนข้อ
+            // สั่งเล่นเสียงโจทย์อัตโนมัติเมื่อขึ้นข้อใหม่
             setTimeout(speakQuestion, 400);
         }
 
