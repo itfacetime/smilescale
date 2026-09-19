@@ -75,7 +75,7 @@
             transform: scale(0.95);
         }
         
-        /* แก้ไข Flexbox บังคับปุ่มเรียงแนวนอน 5 ปุ่มในแถวเดียว ไม่แตกแถวแนวตั้งแน่นอน */
+        /* บังคับปุ่มเรียงแนวนอนแถวเดียวอย่างสวยงาม ไม่แตกแถวแนวตั้ง */
         .choices-wrapper {
             display: flex;
             flex-direction: row;
@@ -150,7 +150,6 @@
             🔊 ฟังเสียงอีกครั้ง
         </button>
 
-        <!-- เปลี่ยนกล่องเก็บปุ่มตัวเลือก บังคับแนวนอนกว้างพอดีจอ -->
         <div id="grid-container" class="choices-wrapper">
             <!-- สร้างปุ่มตัวเลือกตัวอักษรด้วย JavaScript -->
         </div>
@@ -176,7 +175,7 @@
             }
         }
 
-        // โจทย์ออกเสียงเฉพาะตัวอักษรเท่านั้นตามบรีฟเดิม
+        // โจทย์ออกเสียงเฉพาะตัวอักษรเท่านั้น
         function speakQuestion() {
             speakText(targetLetter);
         }
@@ -216,12 +215,12 @@
                         btn.innerHTML = `<span style="font-size: 2rem; color: #ef4444; font-weight: bold;">❌</span>`;
                         btn.className = `choice-correct`;
                         score += 1;
-                        // ปรับปรุง: ตอบถูกให้ออกเสียงจบประโยคสมบูรณ์ชัดเจน
-                        speakText('คุณตอบถูกแล้วค่ะ สุดยอดจริงๆ ค่ะ'); 
+                        // แก้ไข: ตอนตอบถูกจะพูดคำนี้ประโยคเดียวตามสั่ง
+                        speakText('สุดยอดจริงๆ ค่ะ'); 
                         
                         disableAllButtons(true);
                         currentQuestion++;
-                        setTimeout(nextQuestion, 1400);
+                        setTimeout(nextQuestion, 1200);
                     } else {
                         btn.innerHTML = `<span style="font-size: 1.875rem; color: #9ca3af;">❌</span>`;
                         speakText('ลองใหม่ค่ะ');
