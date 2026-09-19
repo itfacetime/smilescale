@@ -69,7 +69,6 @@ button:active{transform:translateY(3px);box-shadow:0 1px 0 #ccc}
 
   <div class="controls">
     <button id="speakBtn" class="hidden">🔊 ฟังอีกครั้ง</button>
-    <button id="nextBtn" class="hidden">➡️ ข้อต่อไป</button>
   </div>
 
   <button id="startBtn" class="start">▶️ เริ่มเกม</button>
@@ -101,17 +100,13 @@ function shuffle(a){
 function newQuestion(){
   locked=false; statusEl.textContent="";
   target=Math.floor(Math.random()*10)+1;
-  
-  // ไม่โชว์เลขที่โจทย์ ให้แสดงเป็นเครื่องหมายคำถามแทน
   numberEl.textContent="?"; 
-  
   instruction.textContent="ฟังเสียง แล้วเลือกตัวเลขที่ได้ยิน";
   answers.innerHTML="";
   
   let opts=new Set([target]);
   while(opts.size<4) opts.add(Math.floor(Math.random()*10)+1);
   
-  // สุ่มสลับตำแหน่งตัวเลือกไม่ให้เรียงลำดับ
   shuffle([...opts]).forEach(n=>{
     const b=document.createElement("button");
     b.className="answer"; b.textContent=n;
@@ -121,36 +116,40 @@ function newQuestion(){
   
   answers.classList.remove("hidden");
   $("speakBtn").classList.remove("hidden");
-  $("nextBtn").classList.add("hidden");
   speak(thai[target]);
 }
 
 function check(n,b){
   if(locked)return;
-  locked=true; total++;
+  
   if(n===target){
+    locked=true; total++;
     score++; b.classList.add("correct");
     statusEl.textContent="🎉 เก่งมาก!";
     speak("เก่งมาก");
     document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
-    $("nextBtn").classList.remove("hidden");
+    scoreEl.textContent=`คะแนน ${score} / ${total}`;
+    
+    // เลื่อนไปข้อใหม่อัตโนมัติหลังจากผ่านไป 1.2 วินาที
+    setTimeout(newQuestion, 1200);
   }else{
+    total++;
     b.classList.add("wrong");
+    b.disabled = true; // ปิดปุ่มที่ตอบผิดไปเลย จะได้ไม่ต้องกดซ้ำ
     statusEl.textContent="ลองใหม่นะ 😊";
     speak("ลองใหม่");
-    locked=false;
+    scoreEl.textContent=`คะแนน ${score} / ${total}`;
+    // ไม่ล็อกเกม ผู้เล่นสามารถเลือกปุ่มอื่นต่อได้ทันที
   }
-  scoreEl.textContent=`คะแนน ${score} / ${total}`;
 }
 
 $("startBtn").onclick=()=>{
-  score=0;total=0;
+  score=0; total=0;
   $("startBtn").classList.add("hidden");
   scoreEl.textContent="คะแนน 0 / 0";
   newQuestion();
 };
 $("speakBtn").onclick=()=>speak(thai[target]);
-$("nextBtn").onclick=newQuestion;
 </script>
 </body>
 </html>
