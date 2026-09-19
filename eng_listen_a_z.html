@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เกมตัวอักษรตามคำสั่งเสียง A-Z (5 ตัวเลือก เสียงไทยชัดเจน)</title>
+    <title>เกมตัวอักษรตามคำสั่งเสียง A-Z (ธีมเอลซ่า & หิมะตก)</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         * {
@@ -13,49 +13,105 @@
         }
         body { 
             font-family: 'Prompt', sans-serif; 
-            background: linear-gradient(135deg, #c7d2fe 0%, #fef08a 100%);
+            /* ใส่พื้นหลังธีมปราสาทน้ำแข็งและเอลซ่าโทนสีฟ้าม่วงพาสเทลสวยงาม */
+            background: linear-gradient(rgba(15, 32, 67, 0.6), rgba(135, 206, 250, 0.4)), 
+                        url('https://unsplash.com') no-repeat center center fixed;
+            background-size: cover;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             padding: 12px;
+            overflow: hidden;
+            position: relative;
         }
+
+        /* --- ระบบเอฟเฟกต์หิมะตก (CSS Snowflakes) --- */
+        .snowflakes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: #fff;
+            font-size: 1.2rem;
+            user-select: none;
+            z-index: 1;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { top: -50px; transform: translateX(0) rotate(0deg); opacity: 1; }
+            100% { top: 100vh; transform: translateX(100px) rotate(360deg); opacity: 0.3; }
+        }
+        /* ตั้งค่าสุ่มตำแหน่งและความเร็วของหิมะแต่ละเม็ด */
+        .snowflake:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+        .snowflake:nth-child(2) { left: 25%; animation-duration: 11s; animation-delay: 1s; font-size: 1.5rem; }
+        .snowflake:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 2s; }
+        .snowflake:nth-child(4) { left: 55%; animation-duration: 13s; animation-delay: 0.5s; font-size: 0.8rem; }
+        .snowflake:nth-child(5) { left: 70%; animation-duration: 10s; animation-delay: 3s; }
+        .snowflake:nth-child(6) { left: 85%; animation-duration: 12s; animation-delay: 1.5s; font-size: 1.6rem; }
+        .snowflake:nth-child(7) { left: 95%; animation-duration: 7s; animation-delay: 2.5s; }
+
+        /* --- รูปเอลซ่าตกแต่งด้านข้างการ์ดเกม (สวยเด่นเห็นชัดบนจอ) --- */
+        .elsa-container {
+            width: 120px;
+            height: 120px;
+            margin-bottom: -15px;
+            z-index: 3;
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.2));
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- ตัวกล่องเกมแบบกระจกใสเข้ากับธีมน้ำแข็ง (Glassmorphism) --- */
         .game-card {
-            background-color: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
             padding: 24px;
             width: 100%;
-            max-width: 480px;
+            max-width: 460px;
             text-align: center;
-        }
-        .emoji-header {
-            font-size: 3rem;
-            margin-bottom: 4px;
+            z-index: 2;
         }
         .game-title {
-            font-size: 1.5rem;
+            font-size: 1.45rem;
             font-weight: 700;
-            color: #4f46e5;
+            color: #1e3a8a;
             margin-bottom: 8px;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
         }
         .status-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 8px;
-            font-size: 1.125rem;
+            font-size: 1.1rem;
             color: #2563eb;
             font-weight: 600;
             margin-bottom: 12px;
         }
         .game-instruction {
-            font-size: 1.125rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            color: #374151;
-            margin-bottom: 24px;
+            color: #475569;
+            margin-bottom: 20px;
         }
         
+        /* บังคับปุ่มเรียงแนวนอนแถวเดียวอย่างสวยงาม ไม่แตกแถวแนวตั้ง */
         .choices-wrapper {
             display: flex;
             flex-direction: row;
@@ -63,19 +119,20 @@
             gap: 8px;
             margin-bottom: 24px;
             padding: 16px 12px;
-            background-color: #f9fafb;
+            background-color: rgba(241, 245, 249, 0.9);
             border-radius: 16px;
             width: 100%;
         }
 
+        /* รูปแบบตัวอักษรแบบพจนานุกรมและหนาปกติ */
         .choice-btn {
             flex: 1;
             font-family: Arial, Helvetica, sans-serif;
             font-weight: 400;
             font-size: 1.875rem;
             background-color: #ffffff;
-            border: 2px solid #e0e7ff;
-            color: #4338ca;
+            border: 2px solid #cbd5e1;
+            color: #1e3a8a;
             padding: 14px 0;
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -87,7 +144,8 @@
             outline: none;
         }
         .choice-btn:hover:not(:disabled) {
-            background-color: #f5f3ff;
+            background-color: #f0fdf4;
+            border-color: #86efac;
         }
         .choice-btn:active:not(:disabled) {
             transform: scale(0.95);
@@ -106,6 +164,7 @@
             border-radius: 12px;
         }
 
+        /* จัดแถวด้านล่างให้แบ่งซ้ายขวา */
         .bottom-container {
             display: flex;
             justify-content: space-between;
@@ -120,20 +179,21 @@
             font-size: 1.5rem;
         }
 
+        /* ปุ่มฟังเสียงอีกครั้งอยู่ล่างขวาเด่นชัดเข้าธีมสีฟ้าน้ำแข็ง */
         .audio-btn {
-            background-color: #e0e7ff;
-            color: #4338ca;
+            background-color: #0284c7;
+            color: #ffffff;
             border: none;
-            padding: 8px 18px;
+            padding: 10px 20px;
             border-radius: 9999px;
             font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
         }
         .audio-btn:hover {
-            background-color: #c7d2fe;
+            background-color: #0369a1;
         }
         .audio-btn:active {
             transform: scale(0.95);
@@ -141,9 +201,21 @@
     </style>
 </head>
 <body>
+
+    <!-- เอฟเฟกต์หิมะตกทั่วหน้าจอ -->
+    <div class="snowflakes">
+        <div class="snowflake">❄</div><div class="snowflake">❅</div>
+        <div class="snowflake">❄</div><div class="snowflake">❆</div>
+        <div class="snowflake">❄</div><div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+    </div>
+
+    <!-- รูปเอลซ่าสุดสวยลอยอยู่เหนือตัวกล่องเกม -->
+    <!-- แก้ไขลิงก์ภาพเอลซ่าตัวใหม่แทนอันเดิมที่หมดอายุ -->
+<img class="elsa-container" src="https://unsplash.com" alt="Elsa Theme">
+
+    <!-- ตัวกล่องเกมสไตล์กระจกน้ำแข็งใส -->
     <div class="game-card">
-        <div class="emoji-header">❌🔤</div>
-        
         <h2 class="game-title">เกมตัวอักษรตามคำสั่งเสียง A-Z</h2>
         <div class="status-container">
             <span id="question-tracker">ข้อที่: 1 / 30</span>
@@ -152,10 +224,12 @@
         
         <p class="game-instruction">ฟังเสียงแล้วกากบาทตัวอักษรนั้น</p>
 
+        <!-- ตัวเลือก 5 ปุ่มแนวนอนด้านบน -->
         <div id="grid-container" class="choices-wrapper">
             <!-- สร้างปุ่มตัวเลือกตัวอักษรด้วย JavaScript -->
         </div>
         
+        <!-- แถวล่าง: คะแนนดาวอยู่ซ้าย และปุ่มฟังเสียงอีกครั้งอยู่ล่างขวาใกล้ดาว -->
         <div class="bottom-container">
             <div class="stars-container">⭐ ⭐ ⭐</div>
             <button onclick="speakQuestion()" class="audio-btn">
@@ -182,7 +256,7 @@
             }
         }
 
-        // ปรับปรุงตรงนี้: เช็กว่าถ้าตัวอักษรเป็น X ให้ระบบ AI อ่านออกเสียงคำว่า "เอ็กซ์" ตรง ๆ แทน เพื่อความชัดเจน
+        // โจทย์ออกเสียงเฉพาะตัวอักษร และตั้งค่าตัว X ให้ออกเสียงชัด ๆ ว่า "เอ็กซ์"
         function speakQuestion() {
             if (targetLetter === 'X') {
                 speakText('เอ็กซ์');
@@ -206,52 +280,3 @@
 
             let choices = [targetLetter];
             while (choices.length < 5) {
-                let randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
-                if (!choices.includes(randomChar)) {
-                    choices.push(randomChar);
-                }
-            }
-            choices.sort(() => Math.random() - 0.5);
-
-            const gridContainer = document.getElementById('grid-container');
-            gridContainer.innerHTML = '';
-            
-            choices.forEach(char => {
-                const btn = document.createElement('button');
-                btn.className = `choice-btn`;
-                btn.innerText = char;
-                
-                btn.onclick = () => {
-                    if (char === targetLetter) {
-                        btn.innerHTML = `<span style="font-size: 2rem; color: #ef4444; font-weight: bold;">❌</span>`;
-                        btn.className = `choice-correct`;
-                        score += 1;
-                        
-                        speakText('สุดยอดจริงๆ ครับ'); 
-                        
-                        disableAllButtons(true);
-                        currentQuestion++;
-                        
-                        setTimeout(nextQuestion, 2200);
-                    } else {
-                        btn.innerHTML = `<span style="font-size: 1.875rem; color: #9ca3af;">❌</span>`;
-                        speakText('ลองใหม่ครับ');
-                    }
-                };
-                gridContainer.appendChild(btn);
-            });
-
-            setTimeout(speakQuestion, 400);
-        }
-
-        function disableAllButtons(disable) {
-            const buttons = document.querySelectorAll('.choices-wrapper button');
-            buttons.forEach(btn => btn.disabled = disable);
-        }
-
-        window.onload = () => {
-            nextQuestion();
-        };
-    </script>
-</body>
-</html>
