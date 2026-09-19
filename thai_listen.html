@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เกมพยัญชนะไทยตามคำสั่ง ก-ถ (ตัวเลือก 5 ตัว)</title>
+    <title>เกมพยัญชนะไทยตามคำสั่ง ก-ถ (ราชบัณฑิตยสถาน)</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=TH+Sarabun+New:wght@700&family=K2D:wght@500;600&display=swap" rel="stylesheet">
     <style>
@@ -38,7 +38,7 @@
         
         <p class="text-base font-semibold text-gray-800 mb-3">ฟังเสียงแล้วกากบาทพยัญชนะนั้น</p>
 
-        <!-- พื้นที่แสดงพยัญชนะตัวเลือก (ขนาดใหญ่พิเศษ เห็นหัวและรอยหยักชัดเจน) -->
+        <!-- พื้นที่แสดงพยัญชนะตัวเลือกขนาดใหญ่พิเศษ -->
         <div id="grid-container" class="grid grid-cols-5 gap-2 mb-4 p-3 bg-gray-50 rounded-2xl min-h-[170px] items-center justify-center">
         </div>
         
@@ -55,41 +55,41 @@
         let score = 0;
         let targetLetter = '';
 
-        // ข้อมูลพยัญชนะไทย ก - ถ แก้ไขเสียงอ่านให้เป็น 2 พยางค์ชัดเจนทุกตัว 100%
+        // ข้อมูลพยัญชนะไทย ก - ถ ออกเสียงตามพจนานุกรม ฉบับราชบัณฑิตยสถาน พ.ศ. 2554 อย่างถูกต้อง
         const thaiConsonants = [
-            { char: "ก", sound: "ก ไก่" },
-            { char: "ข", sound: "ข ไข่" },
-            { char: "ฃ", sound: "ฃ ขวด" },
-            { char: "ค", sound: "ค ควาย" },
-            { char: "ฅ", sound: "ฅ คน" },
-            { char: "ฆ", sound: "ฆ ระฆัง" },
-            { char: "ง", sound: "ง งู" },
-            { char: "จ", sound: "จ จาน" },
-            { char: "ฉ", sound: "ฉ ฉิ่ง" },
-            { char: "ช", sound: "ช ช้าง" },
-            { char: "ซ", sound: "ซ โซ่" },
-            { char: "ฌ", sound: "ฌ เฌอ" },
-            { char: "ญ", sound: "ญ หญิง" },
-            { char: "ฎ", sound: "ฎ ชฎา" },
-            { char: "ฏ", sound: "ฏ ปฏัก" },
-            { char: "ฐ", sound: "ฐ ฐาน" },
-            { char: "ฑ", sound: "ฑ มณโฑ" },
-            { char: "ฒ", sound: "ฒ ผู้เฒ่า" },
-            { char: "ณ", sound: "ณ เณร" },
-            { char: "ด", sound: "ด เด็ก" },
-            { char: "ต", sound: "ต เต่า" },
-            { char: "ถ", sound: "ถ ถุง" }
+            { char: "ก", sound: "กอ ไก่" },
+            { char: "ข", sound: "ขอ ไข่" },
+            { char: "ฃ", sound: "ขอ ขวด" },
+            { char: "ค", sound: "คอ ควาย" },
+            { char: "ฅ", sound: "คอ คน" },
+            { char: "ฆ", sound: "คอ ระฆัง" },
+            { char: "ง", sound: "งอ งู" },
+            { char: "จ", sound: "จอ จาน" },
+            { char: "ฉ", sound: "ฉอ ฉิ่ง" },
+            { char: "ช", sound: "ชอ ช้าง" },
+            { char: "ซ", sound: "ซอ โซ่" },
+            { char: "ฌ", sound: "ชอ เฌอ" },
+            { char: "ญ", sound: "ยอ หญิง" },
+            { char: "ฎ", sound: "ดอ ชฎา" },
+            { char: "ฏ", sound: "ตอ ปฏัก" },
+            { char: "ฐ", sound: "ถอ ฐาน" },
+            { char: "ฑ", sound: "ทอ มณโฑ" },
+            { char: "ฒ", sound: "ทอ ผู้เฒ่า" },
+            { char: "ณ", sound: "นอ เณร" },
+            { char: "ด", sound: "ดอ เด็ก" },
+            { char: "ต", sound: "ตอ เต่า" },
+            { char: "ถ", sound: "ถอ ถุง" }
         ];
 
         let targetObj = {};
 
-        // ฟังก์ชันระบบเสียงพูดภาษาไทย (พร้อมการตั้งค่าเสียงภาษาไทยและ Callback ป้องกันเสียงตัด)
+        // ฟังก์ชันระบบเสียงพูดภาษาไทย (พร้อม Callback ป้องกันการตัดเสียงก่อนจบประโยค)
         function speakText(text, onEndCallback) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'th-TH';
-                utterance.rate = 0.82; // ความเร็วพอดี ออกเสียงชัดถ้อยชัดคำทุกพยางค์
+                utterance.rate = 0.80; // ความเร็วพอดี ออกเสียงชัดถ้อยชัดคำตามหลักภาษา
                 utterance.pitch = 1.0; 
 
                 const voices = window.speechSynthesis.getVoices();
@@ -160,7 +160,7 @@
                         
                         disableAllButtons(true);
                         
-                        // เมื่อตอบถูก พูดคำว่า "สุดยอดมากเลยค่ะ" จนจบประโยคสนิท แล้วค่อยเปลี่ยนข้อ
+                        // เมื่อตอบถูก พูดคำว่า "สุดยอดมากเลยค่ะ" ให้จบประโยคสนิท แล้วค่อยเปลี่ยนข้อ
                         speakText('สุดยอดมากเลยค่ะ', () => {
                             currentQuestion++;
                             setTimeout(nextQuestion, 400);
