@@ -55,7 +55,7 @@
         let score = 0;
         let targetLetter = '';
 
-        // ข้อมูลพยัญชนะไทย ก - ถ พร้อมเสียงอ่าน 2 พยางค์เต็มคำที่ชัดเจน
+        // ข้อมูลพยัญชนะไทย ก - ถ พร้อมเสียงอ่าน 2 พยางค์ชัดเจนทุกตัว
         const thaiConsonants = [
             { char: "ก", sound: "ก ไก่" },
             { char: "ข", sound: "ข ไข่" },
@@ -83,8 +83,8 @@
 
         let targetObj = {};
 
-        // ฟังก์ชันระบบเสียงพูดภาษาไทย
-        function speakText(text) {
+        // ฟังก์ชันระบบเสียงพูดภาษาไทย (พร้อม Callback ป้องกันการตัดเสียงก่อนจบประโยค)
+        function speakText(text, onEndCallback) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
@@ -98,7 +98,13 @@
                     utterance.voice = thaiVoice;
                 }
 
+                if (onEndCallback) {
+                    utterance.onend = onEndCallback;
+                }
+
                 window.speechSynthesis.speak(utterance);
+            } else {
+                if (onEndCallback) onEndCallback();
             }
         }
 
@@ -114,10 +120,13 @@
 
         function nextQuestion() {
             if (currentQuestion > totalQuestions) {
-                speakText(`จบเกมแล้วครับ คุณได้คะแนน ${score} คะแนน จาก 30 คะแนน`);
-                alert(`🎉 จบเกมแล้ว! คุณได้คะแนน ${score} / 30 คะแนน`);
-                currentQuestion = 1;
-                score = 0;
+                speakText(`จบเกมแล้วครับ คุณได้คะแนน ${score} คะแนน จาก 30 คะแนน`, () => {
+                    alert(`🎉 จบเกมแล้ว! คุณได้คะแนน ${score} / 30 คะแนน`);
+                    currentQuestion = 1;
+                    score = 0;
+                    nextQuestion();
+                });
+                return;
             }
 
             document.getElementById('question-tracker').innerText = `ข้อที่: ${currentQuestion} / ${totalQuestions}`;
@@ -149,12 +158,14 @@
                         btn.className = `bg-red-50 border-2 border-red-300 font-bold py-5 rounded-2xl shadow-md flex items-center justify-center`;
                         score += 1;
                         
-                        // เมื่อตอบถูก พูดคำว่า "เก่งมากเลย" ชัด ๆ
-                        speakText('เก่งมากเลย');
-                        
                         disableAllButtons(true);
-                        currentQuestion++;
-                        setTimeout(nextQuestion, 1500);
+                        
+                        // เมื่อตอบถูก จะพูดคำว่า "สุดยอดมากเลยค่ะ" ให้จบประโยคสนิทก่อน แล้วค่อยขึ้นข้อใหม่
+                        speakText('สุดยอดมากเลยค่ะ', () => {
+                            currentQuestion++;
+                            setTimeout(nextQuestion, 400);
+                        });
+
                     } else {
                         btn.innerHTML = `<span class="text-6xl text-gray-400">❌</span>`;
                         speakText('ลองใหม่นะ');
