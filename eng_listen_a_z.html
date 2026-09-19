@@ -53,42 +53,21 @@
             font-size: 1.125rem;
             font-weight: 600;
             color: #374151;
-            margin-bottom: 12px;
-        }
-        .audio-btn {
-            background-color: #e0e7ff;
-            color: #4338ca;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 9999px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        .audio-btn:hover {
-            background-color: #c7d2fe;
-        }
-        .audio-btn:active {
-            transform: scale(0.95);
+            margin-bottom: 24px;
         }
         
-        /* บังคับปุ่มเรียงแนวนอนแถวเดียวอย่างสวยงาม ไม่แตกแถวแนวตั้ง */
         .choices-wrapper {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             padding: 16px 12px;
             background-color: #f9fafb;
             border-radius: 16px;
             width: 100%;
         }
 
-        /* รูปแบบตัวอักษรแบบพจนานุกรมและหนาปกติ */
         .choice-btn {
             flex: 1;
             font-family: Arial, Helvetica, sans-serif;
@@ -126,11 +105,38 @@
             padding: 14px 0;
             border-radius: 12px;
         }
+
+        .bottom-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4px;
+            margin-top: 8px;
+        }
+
         .stars-container {
             display: flex;
-            justify-content: center;
-            gap: 8px;
+            gap: 6px;
             font-size: 1.5rem;
+        }
+
+        .audio-btn {
+            background-color: #e0e7ff;
+            color: #4338ca;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .audio-btn:hover {
+            background-color: #c7d2fe;
+        }
+        .audio-btn:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
@@ -145,16 +151,17 @@
         </div>
         
         <p class="game-instruction">ฟังเสียงแล้วกากบาทตัวอักษรนั้น</p>
-        
-        <button onclick="speakQuestion()" class="audio-btn">
-            🔊 ฟังเสียงอีกครั้ง
-        </button>
 
         <div id="grid-container" class="choices-wrapper">
             <!-- สร้างปุ่มตัวเลือกตัวอักษรด้วย JavaScript -->
         </div>
         
-        <div class="stars-container">⭐ ⭐ ⭐</div>
+        <div class="bottom-container">
+            <div class="stars-container">⭐ ⭐ ⭐</div>
+            <button onclick="speakQuestion()" class="audio-btn">
+                🔊 ฟังเสียงอีกครั้ง
+            </button>
+        </div>
     </div>
 
     <script>
@@ -165,17 +172,17 @@
 
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
+        // เพิ่มการปรับความเร็วเสียง (rate) ให้ออกเสียงได้เต็มคำ ไม่รวบคำ
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'th-TH'; 
-                utterance.rate = 0.9; 
+                utterance.rate = 0.88; // ปรับความเร็วลดลงเล็กน้อย เพื่อให้เสียงหางเสียงทอดได้ชัดเจนขึ้น
                 window.speechSynthesis.speak(utterance);
             }
         }
 
-        // โจทย์ออกเสียงเฉพาะตัวอักษรเท่านั้น
         function speakQuestion() {
             speakText(targetLetter);
         }
@@ -216,13 +223,12 @@
                         btn.className = `choice-correct`;
                         score += 1;
                         
+                        // ปรับปรุง: แก้ไขคำสั่งพูดให้ใช้เสียงวรรณยุกต์โท "ค่ะ" เพื่อให้ AI ออกเสียงประโยคบอกเล่าได้ชัดเจนเด็ดขาด
                         speakText('สุดยอดจริงๆ ค่ะ'); 
                         
                         disableAllButtons(true);
                         currentQuestion++;
                         
-                        // แก้ไขจุดนี้: ขยายเวลาหน่วงจาก 1200 เป็น 2200 มิลลิวินาที (2.2 วินาที) 
-                        // เพื่อให้ระบบเปิดช่องให้เสียงพูดจนจบประโยคสมบูรณ์ก่อนจะขยับเลื่อนข้อ
                         setTimeout(nextQuestion, 2200);
                     } else {
                         btn.innerHTML = `<span style="font-size: 1.875rem; color: #9ca3af;">❌</span>`;
