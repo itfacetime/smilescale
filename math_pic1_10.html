@@ -40,26 +40,27 @@
             font-size: 18px;
             color: #4D4D4D;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background: #F0F0F0;
             padding: 8px 20px;
             border-radius: 50px;
             display: inline-block;
         }
 
+        /* ขยายพื้นที่และขนาดอีโมจิให้ใหญ่ชัดเจน */
         .image-display-area {
             background-color: #FAFAFA;
             border: 4px dashed #FFD166;
             border-radius: 20px;
-            min-height: 150px;
+            min-height: 180px;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 15px;
             padding: 20px;
-            margin-bottom: 25px;
-            font-size: 50px;
+            margin-bottom: 20px;
+            font-size: 65px; 
             user-select: none;
         }
 
@@ -67,13 +68,14 @@
             font-size: 20px;
             color: #4A90E2;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
+        /* ปรับตารางตัวเลือกให้เหลือ 5 ปุ่ม เรียงแถวเดียวหรือสวยงาม */
         .options-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 25px;
         }
 
@@ -81,10 +83,10 @@
             background-color: #FFF;
             border: 3px solid #E0E0E0;
             border-bottom: 6px solid #E0E0E0;
-            border-radius: 15px;
-            font-size: 22px;
+            border-radius: 18px;
+            font-size: 30px; /* ขยายตัวเลขในปุ่มให้ใหญ่ชัดเจน */
             font-weight: bold;
-            padding: 12px 0;
+            padding: 15px 0;
             cursor: pointer;
             transition: all 0.1s ease;
             color: #4D4D4D;
@@ -93,15 +95,6 @@
         .btn-option:active {
             border-bottom-width: 3px;
             transform: translateY(3px);
-        }
-
-        .btn-option.selected {
-            background-color: #FFE5EC !important;
-            border-color: #FF6B6B !important;
-            border-bottom-color: #FF6B6B !important;
-            color: #FF6B6B !important;
-            transform: translateY(2px);
-            border-bottom-width: 4px;
         }
 
         .btn-option.correct {
@@ -121,7 +114,7 @@
         .feedback-message {
             font-size: 22px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             min-height: 30px;
         }
         
@@ -207,17 +200,30 @@
             usedNumbers.push(correctAnswer);
             const randomEmoji = emojiList[Math.floor(Math.random() * emojiList.length)];
             
+            // แสดงรูปภาพโจทย์ขนาดใหญ่
             const imageArea = document.getElementById('image-area');
             imageArea.innerHTML = '';
             for(let i = 0; i < correctAnswer; i++) {
                 imageArea.innerHTML += `<span>${randomEmoji}</span>`;
             }
 
+            // สุ่มตัวเลือก 5 ตัว (รวมตัวที่ถูกต้อง และตัวเลขอื่นที่ไม่ซ้ำกัน 1-10)
+            let optionSet = new Set([correctAnswer]);
+            while(optionSet.size < 5) {
+                let randomNum = Math.floor(Math.random() * 10) + 1;
+                optionSet.add(randomNum);
+            }
+            
+            // แปลง Set เป็น Array แล้วสลับตำแหน่ง (Shuffle)
+            let optionsArray = Array.from(optionSet);
+            optionsArray.sort(() => Math.random() - 0.5);
+
+            // สร้างปุ่มตัวเลือก 5 ปุ่ม
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
-            for(let i = 1; i <= 10; i++) {
-                optionsContainer.innerHTML += `<button class="btn-option" id="opt-${i}" onclick="checkAnswer(${i})">${i}</button>`;
-            }
+            optionsArray.forEach(num => {
+                optionsContainer.innerHTML += `<button class="btn-option" id="opt-${num}" onclick="checkAnswer(${num})">${num}</button>`;
+            });
         }
 
         function checkAnswer(selectedNumber) {
@@ -230,13 +236,12 @@
                 selectedButton.classList.add('correct');
                 score++;
                 document.getElementById('current-score').textContent = score;
-                document.getElementById('feedback').textContent = '✨ ถูกตอนแล้วจ้า! เก่งมาก ๆ เลย 🌟';
+                document.getElementById('feedback').textContent = '✨ ถูกต้องแล้วจ้า! เก่งมาก ๆ เลย 🌟';
                 document.getElementById('feedback').style.color = '#2B8A3E';
                 
                 // ปิดการกดทุกปุ่มเมื่อตอบถูก
-                for(let i = 1; i <= 10; i++) {
-                    document.getElementById(`opt-${i}`).style.pointerEvents = 'none';
-                }
+                const allButtons = document.querySelectorAll('.btn-option');
+                allButtons.forEach(btn => btn.style.pointerEvents = 'none');
 
                 speakThai("ถูกต้องแล้วจ้า เก่งมาก ๆ เลย");
 
@@ -254,7 +259,7 @@
                 }, 2200);
 
             } else {
-                // ตอบผิด ให้ขึ้นเตือนและเปิดโอกาสให้เลือกใหม่
+                // ตอบผิด ให้ขึ้นเตือนและเปิดโอกาสให้เลือกใหม่เฉพาะปุ่มที่ผิด
                 selectedButton.classList.add('wrong');
                 selectedButton.style.pointerEvents = 'none'; // ปิดไม่ให้กดปุ่มเดิมซ้ำ
                 document.getElementById('feedback').textContent = '❌ ยังไม่ถูกน้า ลองใหม่นะจ๊ะ 😊';
