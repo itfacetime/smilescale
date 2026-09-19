@@ -32,10 +32,10 @@ h1{margin:0 0 5px;font-size:clamp(26px,7vw,40px)}
 .mouth{position:absolute;top:79px;left:35px;width:45px;height:22px;border-bottom:5px solid #111;border-radius:0 0 50% 50%}
 .shirt{position:absolute;bottom:0;left:18px;width:79px;height:30px;background:#e53935;border-radius:18px 18px 0 0}
 .number{
-  font-size:clamp(100px,30vw,190px);font-weight:900;line-height:.95;
+  font-size:clamp(90px,25vw,150px);font-weight:900;line-height:.95;
   margin:5px 0 12px; color:#e91e63; text-shadow:4px 5px 0 #ffd54f;
 }
-.instruction{font-size:20px;font-weight:bold;margin:4px 0 12px}
+.instruction{font-size:20px;font-weight:bold;margin:4px 0 12px;white-space:pre-line;}
 .answers{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 button{
   border:0;border-radius:18px;padding:15px;font-size:22px;font-weight:bold;
@@ -45,17 +45,16 @@ button:active{transform:translateY(3px);box-shadow:0 1px 0 #ccc}
 .answer.correct{background:#b9f6ca}
 .answer.wrong{background:#ffcdd2}
 .controls{display:flex;gap:10px;margin-top:14px}
-.controls button{flex:1;font-size:17px;background:#fff3cd}
 .status{min-height:32px;margin-top:12px;font-size:22px;font-weight:bold}
 .score{font-size:17px;color:#666;margin-top:5px}
-.start{background:#4caf50;color:white;box-shadow:0 4px 0 #388e3c}
+.start{background:#4caf50;color:white;box-shadow:0 4px 0 #388e3c;font-size:22px;padding:15px 30px;width:100%;margin-top:15px}
 .hidden{display:none!important}
 </style>
 </head>
 <body>
 <div class="game">
   <h1>🎯 เกมตัวเลขตามคำสั่ง 1-10</h1>
-  <div class="sub">ฟังตัวเลข แล้วเลือกคำตอบให้ถูกต้อง</div>
+  <div class="sub">ทั้งหมด 20 ข้อ ฟังตัวเลข แล้วเลือกคำตอบให้ถูกต้อง</div>
 
   <div class="character" aria-label="ตัวการ์ตูนน่ารัก">
     <div class="hair"></div><div class="eye l"></div><div class="eye r"></div>
@@ -63,7 +62,7 @@ button:active{transform:translateY(3px);box-shadow:0 1px 0 #ccc}
   </div>
 
   <div id="number" class="number">?</div>
-  <div id="instruction" class="instruction">กดเริ่มเกม</div>
+  <div id="instruction" class="instruction">กดเริ่มเกมเพื่อสนุกกันเลย!</div>
 
   <div id="answers" class="answers hidden"></div>
 
@@ -73,12 +72,12 @@ button:active{transform:translateY(3px);box-shadow:0 1px 0 #ccc}
 
   <button id="startBtn" class="start">▶️ เริ่มเกม</button>
   <div id="status" class="status"></div>
-  <div id="score" class="score">คะแนน 0 / 0</div>
+  <div id="score" class="score"></div>
 </div>
 
 <script>
 const thai = ["ศูนย์","หนึ่ง","สอง","สาม","สี่","ห้า","หก","เจ็ด","แปด","เก้า","สิบ"];
-let target=0, score=0, total=0, locked=true;
+let target=0, score=0, currentQ=0, maxQ=20, locked=true;
 
 const $ = id => document.getElementById(id);
 const numberEl=$("number"), instruction=$("instruction"), answers=$("answers");
@@ -98,10 +97,15 @@ function shuffle(a){
 }
 
 function newQuestion(){
+  if(currentQ >= maxQ){
+    endGame();
+    return;
+  }
+  
   locked=false; statusEl.textContent="";
   target=Math.floor(Math.random()*10)+1;
   numberEl.textContent="?"; 
-  instruction.textContent="ฟังเสียง แล้วเลือกตัวเลขที่ได้ยิน";
+  instruction.textContent=`ข้อที่ ${currentQ + 1} / ${maxQ}\nฟังเสียง แล้วเลือกตัวเลขที่ได้ยิน`;
   answers.innerHTML="";
   
   let opts=new Set([target]);
@@ -123,31 +127,63 @@ function check(n,b){
   if(locked)return;
   
   if(n===target){
-    locked=true; total++;
-    score++; b.classList.add("correct");
+    locked=true; 
+    score++; 
+    currentQ++;
+    b.classList.add("correct");
     statusEl.textContent="🎉 เก่งมาก!";
     speak("เก่งมาก");
     document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
-    scoreEl.textContent=`คะแนน ${score} / ${total}`;
+    scoreEl.textContent=`คะแนนรวม: ${score} / ${maxQ}`;
     
-    // เพิ่มเวลาหน่วงเป็น 2.2 วินาที ให้เสียงพูดจบครบประโยคก่อนเปลี่ยนข้อ
-    setTimeout(newQuestion, 2200);
+    setTimeout(() => {
+      if(currentQ >= maxQ){
+        endGame();
+      } else {
+        newQuestion();
+      }
+    }, 2200);
   }else{
-    total++;
     b.classList.add("wrong");
     b.disabled = true; 
     statusEl.textContent="ลองใหม่นะ 😊";
     speak("ลองใหม่");
-    scoreEl.textContent=`คะแนน ${score} / ${total}`;
   }
 }
 
+function endGame(){
+  locked = true;
+  answers.classList.add("hidden");
+  $("speakBtn").classList.add("hidden");
+  numberEl.textContent = "🏆";
+  
+  let message = "";
+  let speechText = "";
+  
+  if(score === maxQ){
+    message = `🎉 ยินดีด้วย! คุณได้ ${score} / ${maxQ} คะแนน\nสุดยอดไปเลย!`;
+    speechText = "สุดยอดไปเลย";
+  } else {
+    message = `🌟 คุณได้ ${score} / ${maxQ} คะแนน\nคุณทำได้ดีแล้ว สู้ ๆ ค่ะ`;
+    speechText = "คุณทำได้ดีแล้ว สู้ ๆ ค่ะ";
+  }
+  
+  instruction.textContent = message;
+  statusEl.textContent = "";
+  scoreEl.textContent = "";
+  $("startBtn").textContent = "🔄 เล่นใหม่อีกครั้ง";
+  $("startBtn").classList.remove("hidden");
+  speak(speechText);
+}
+
 $("startBtn").onclick=()=>{
-  score=0; total=0;
+  score=0; 
+  currentQ=0;
   $("startBtn").classList.add("hidden");
-  scoreEl.textContent="คะแนน 0 / 0";
+  scoreEl.textContent=`คะแนนรวม: 0 / ${maxQ}`;
   newQuestion();
 };
+
 $("speakBtn").onclick=()=>speak(thai[target]);
 </script>
 </body>
