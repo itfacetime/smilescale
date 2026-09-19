@@ -55,6 +55,7 @@
         let score = 0;
         let targetLetter = '';
 
+        // ข้อมูลพยัญชนะไทย ก - ถ พร้อมเสียงอ่าน 2 พยางค์เต็มคำที่ชัดเจน
         const thaiConsonants = [
             { char: "ก", sound: "ก ไก่" },
             { char: "ข", sound: "ข ไข่" },
@@ -82,13 +83,13 @@
 
         let targetObj = {};
 
-        // ปรับระบบเสียงพูดให้อ่านเร็วขึ้น ชัดเจน และจบประโยคต่อเนื่องกันพอดี
+        // ฟังก์ชันระบบเสียงพูดภาษาไทย
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'th-TH';
-                utterance.rate = 0.90; // ปรับความเร็วให้พอดี ไม่ช้าหรือเร็วเกินไป ออกเสียงจบประโยคชัดเจน
+                utterance.rate = 0.85; // ความเร็วพอดี ออกเสียงชัดถ้อยชัดคำ
                 utterance.pitch = 1.0; 
 
                 const voices = window.speechSynthesis.getVoices();
@@ -147,14 +148,16 @@
                         btn.innerHTML = `<span class="text-7xl text-red-500 font-bold">❌</span>`;
                         btn.className = `bg-red-50 border-2 border-red-300 font-bold py-5 rounded-2xl shadow-md flex items-center justify-center`;
                         score += 1;
-                        speakText('ถูกต้องครับ');
+                        
+                        // เมื่อตอบถูก พูดคำว่า "เก่งมากเลย" ชัด ๆ
+                        speakText('เก่งมากเลย');
                         
                         disableAllButtons(true);
                         currentQuestion++;
-                        setTimeout(nextQuestion, 1200);
+                        setTimeout(nextQuestion, 1500);
                     } else {
                         btn.innerHTML = `<span class="text-6xl text-gray-400">❌</span>`;
-                        speakText('ลองใหม่ครับ');
+                        speakText('ลองใหม่นะ');
                     }
                 };
                 gridContainer.appendChild(btn);
