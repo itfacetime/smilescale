@@ -130,16 +130,15 @@ function check(n,b){
     document.querySelectorAll(".answer").forEach(x=>x.disabled=true);
     scoreEl.textContent=`คะแนน ${score} / ${total}`;
     
-    // เลื่อนไปข้อใหม่อัตโนมัติหลังจากผ่านไป 1.2 วินาที
-    setTimeout(newQuestion, 1200);
+    // เพิ่มเวลาหน่วงเป็น 2.2 วินาที ให้เสียงพูดจบครบประโยคก่อนเปลี่ยนข้อ
+    setTimeout(newQuestion, 2200);
   }else{
     total++;
     b.classList.add("wrong");
-    b.disabled = true; // ปิดปุ่มที่ตอบผิดไปเลย จะได้ไม่ต้องกดซ้ำ
+    b.disabled = true; 
     statusEl.textContent="ลองใหม่นะ 😊";
     speak("ลองใหม่");
     scoreEl.textContent=`คะแนน ${score} / ${total}`;
-    // ไม่ล็อกเกม ผู้เล่นสามารถเลือกปุ่มอื่นต่อได้ทันที
   }
 }
 
