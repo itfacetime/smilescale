@@ -182,8 +182,13 @@
             }
         }
 
+        // ปรับปรุงตรงนี้: เช็กว่าถ้าตัวอักษรเป็น X ให้ระบบ AI อ่านออกเสียงคำว่า "เอ็กซ์" ตรง ๆ แทน เพื่อความชัดเจน
         function speakQuestion() {
-            speakText(targetLetter);
+            if (targetLetter === 'X') {
+                speakText('เอ็กซ์');
+            } else {
+                speakText(targetLetter);
+            }
         }
 
         function nextQuestion() {
@@ -222,7 +227,6 @@
                         btn.className = `choice-correct`;
                         score += 1;
                         
-                        // ปรับปรุง: เปลี่ยนเสียงตอบถูกเป็น "สุดยอดจริงๆ ครับ"
                         speakText('สุดยอดจริงๆ ครับ'); 
                         
                         disableAllButtons(true);
